@@ -221,40 +221,8 @@ export class Canvas {
 						originY: 'top'
 					});
 
-					if (anchorX == "left" && anchorY == "top") {
-						// right middle grow
-						// right middle shrink
-						// bottom middle grow
-						// bottom middle shrink
-						newRect["left"] = scaledObject.left + (this.gridSize * currentX);
-						newRect["top"] = scaledObject.top + (this.gridSize * currentY);
-					}
-					else if (anchorX == "left" && anchorY == "bottom") {
-						if (isGrowingY) {
-							// top middle grow
-							newRect["left"] = scaledObject.left + (this.gridSize * currentX);
-							newRect["top"] = scaledObject.top - 25 + (this.gridSize * currentY);
-						}
-
-						if (isShrinkingY) {
-							// top middle shrink
-							newRect["left"] = scaledObject.left + (this.gridSize * currentX);
-							newRect["top"] = scaledObject.top + 25 + (this.gridSize * currentY);
-						}
-					}
-					else if (anchorX == "right" && anchorY == "top") {
-						if (isGrowingX) {
-							// left middle grow
-							newRect["left"] = scaledObject.left - 25 + (this.gridSize * currentX);
-							newRect["top"] = scaledObject.top + (this.gridSize * currentY);
-						}
-
-						if (isShrinkingX) {
-							// left middle shrink
-							newRect["left"] = scaledObject.left + 25 + (this.gridSize * currentX);
-							newRect["top"] = scaledObject.top + (this.gridSize * currentY);
-						}
-					}
+					newRect["left"] = scaledObject.left + (this.gridSize * currentX);
+					newRect["top"] = scaledObject.top + (this.gridSize * currentY);
 
 					this.fabricCanvas.add(newRect);
 					this.fabricCanvas.sendToBack(newRect);
