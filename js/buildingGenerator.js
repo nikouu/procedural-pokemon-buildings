@@ -25,4 +25,9 @@ export class BuildingGenerator {
 	setSettings(options = {}){
 		this.#settings = Object.assign(this.#defaultFeatures, options);
 	}
+
+	// generate a 2d array of tiles based on rules to construct a building
+	generate(){
+
+	}
 }
