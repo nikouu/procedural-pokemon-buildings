@@ -4,33 +4,34 @@ export class Canvas {
 	// Javascript flavour of named parameters with optional parameters
 	// https://javascript.info/destructuring-assignment#smart-function-parameters
 	constructor({ canvasId = "canvas", width = 600, height = 600 } = {}) {
+		this.width = width;
+		this.height = height;
+		this.gridSize = 50;
+		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
+		this.selectionCoords = new fabric.Point(this.gridSize *2, this.gridSize*2);
+		this.currentXScale = 1;
+		this.currentYScale = 1;
 
 		this.fabricCanvas = new fabric.Canvas(canvasId,
 			{
-				width: width,
-				height: height,
+				width: this.width,
+				height: this.height,
 				preserveObjectStacking: true
 			}
 		);
-
-		this.gridSize = 50;
-		this.selectionCoords = new fabric.Point(100, 100);
-		this.currentXScale = 1;
-		this.currentYScale = 1;
 
 		this.#setupGrid();
 		this.#setupEvents();
 		this.#setupSelectorRectangle();
 	}
 
-	// TODO: make this dependent on canvas size and not hardcoded 600
 	#setupGrid() {
-		for (let i = 0; i < (600 / this.gridSize); i++) {
-			this.fabricCanvas.add(new fabric.Line([i * this.gridSize, 0, i * this.gridSize, 600], {
+		for (let i = 0; i < (Math.max(this.width, this.height) / this.gridSize); i++) {
+			this.fabricCanvas.add(new fabric.Line([i * this.gridSize, 0, i * this.gridSize, this.height], {
 				stroke: '#ccc',
 				selectable: false
 			}));
-			this.fabricCanvas.add(new fabric.Line([0, i * this.gridSize, 600, i * this.gridSize], {
+			this.fabricCanvas.add(new fabric.Line([0, i * this.gridSize, this.width, i * this.gridSize], {
 				stroke: '#ccc',
 				selectable: false
 			}))
@@ -39,8 +40,8 @@ export class Canvas {
 
 	#setupSelectorRectangle() {
 		const selectionRect = new fabric.Rect({
-			left: this.gridSize * 2,
-			top: this.gridSize * 2,
+			left: this.selectionCoords.x,
+			top: this.selectionCoords.y,
 			width: this.gridSize,
 			height: this.gridSize,
 			fill: 'rgba(120,5,5,0.2)',
@@ -186,7 +187,6 @@ export class Canvas {
 
 		for (let currentX = 0; currentX < scaledObject.scaleX; currentX++) {
 			for (let currentY = 0; currentY < scaledObject.scaleY; currentY++) {
-
 				let newRect = new fabric.Rect({
 					width: this.gridSize * 1,
 					height: this.gridSize * 1,
