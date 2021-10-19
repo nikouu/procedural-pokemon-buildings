@@ -1,10 +1,5 @@
-import {Canvas} from './canvas.js'
-import {SelectionRect} from './selectionRect.js'
+import { Canvas } from './canvas.js'
 
-let canvas = new Canvas();
-canvas.setupGrid();
-
-let selectionRect = new SelectionRect(canvas.canvas, 50);
-selectionRect.init();
-
-canvas.run();
+document.addEventListener("DOMContentLoaded", () => {
+	let canvas = new Canvas();
+});
