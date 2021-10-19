@@ -21,8 +21,8 @@ export class Canvas {
 		);
 
 		this.#setupGrid();
-		this.#setupEvents();
 		this.#setupSelectorRectangle();
+		this.#setupEvents();		
 	}
 
 	#setupGrid() {
@@ -81,16 +81,12 @@ export class Canvas {
 			left: this.#snap(event.target.left),
 			top: this.#snap(event.target.top),
 		};
+
 		event.target.set(snap);
 
-		let reDraw = false;
-
+		// if the selection rectangle has moved
 		if (this.selectionCoords.x != snap.left ||
 			this.selectionCoords.y != snap.top) {
-			reDraw = true;
-		}
-
-		if (reDraw) {
 			let objectsToMove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'layeredRect');
 
 			objectsToMove.forEach((element) => {
@@ -185,6 +181,8 @@ export class Canvas {
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
 
+		// for when the real tiles come in, perhaps have an object here that generates the tiles and asking by x,y via this loop
+		// then that generator returns 
 		for (let currentX = 0; currentX < scaledObject.scaleX; currentX++) {
 			for (let currentY = 0; currentY < scaledObject.scaleY; currentY++) {
 				let newRect = new fabric.Rect({
