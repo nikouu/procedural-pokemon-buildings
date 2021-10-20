@@ -13,7 +13,7 @@ export const Decoration = {
 	gym: "gym",
 	doubleGym: "doubleGym",
 	mart: "mart",
-	pokemonCentre: "pokemonCentre"
+	pokemonCenter: "pokemonCenter"
 }
 
 export const Depth = {
