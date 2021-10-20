@@ -1,3 +1,8 @@
+export const Roof = {
+	horizontal: 0,
+	hatch: 1
+}
+
 export const Cladding = {
 	wood: "wood",
 	brick: "brick"

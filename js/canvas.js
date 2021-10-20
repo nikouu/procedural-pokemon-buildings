@@ -87,7 +87,7 @@ export class Canvas {
 		// if the selection rectangle has moved
 		if (this.selectionCoords.x != snap.left ||
 			this.selectionCoords.y != snap.top) {
-			let objectsToMove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'layeredRect');
+			let objectsToMove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
 
 			objectsToMove.forEach((element) => {
 				element.set({
@@ -176,20 +176,21 @@ export class Canvas {
 			scaledObject.setPositionByOrigin(anchorPoint, anchorX, anchorY);
 		}
 
-		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e["name"] === 'layeredRect');
+		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e["name"] === 'buildingTile');
 
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
 
 		// for when the real tiles come in, perhaps have an object here that generates the tiles and asking by x,y via this loop
 		// then that generator returns 
+		// this draws top to bottom, left to right
 		for (let currentX = 0; currentX < scaledObject.scaleX; currentX++) {
 			for (let currentY = 0; currentY < scaledObject.scaleY; currentY++) {
 				let newRect = new fabric.Rect({
 					width: this.gridSize * 1,
 					height: this.gridSize * 1,
 					fill: '#000',
-					name: 'layeredRect',
+					name: 'buildingTile',
 					selectable: false,
 					originX: 'left',
 					originY: 'top',
