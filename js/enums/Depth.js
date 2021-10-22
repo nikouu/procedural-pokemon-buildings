@@ -1,5 +1,5 @@
 export const Depth = {
-	small: 1,
-	medium: 2,
-	large: 3
+	small: 2,
+	medium: 4,
+	large: 6
 }

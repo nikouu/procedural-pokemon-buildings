@@ -12,13 +12,13 @@ export class BuildingGenerator {
 	// it takes two tiles to create one floor. 
 	// might need a seed too?
 	#defaultFeatures = {
-		height: 2,
-		width: 4,
+		height: 2, // tiles
+		width: 4, // tiles
 		hasDoor: true,
 		hasWindowGap: true,
 		cladding: Cladding.brick,
 		decoration: Decoration.pokemonCenter,
-		depth: Depth.medium
+		depth: Depth.small
 	}
 
 	#settings = {}
@@ -49,26 +49,32 @@ export class BuildingGenerator {
 	generate() {
 		// use the enum value to increase the height. since this is a 2D plane, the depth of the building
 		// is just added to the height
-		const height = this.#settings.height + this.#settings.depth;
 
 		//setup array
-		// it takes two tiles to create one floor thus *2
-		this.#tileArray = [...Array(height * 2)].map(() => Array(this.#settings.width * 2).fill(0));
+		this.#tileArray = [...Array( this.#settings.width)].map(() => Array(this.#settings.height).fill(0));
 
 
 		// create the raw tile array
 		this.#setRoof();
-		this.#setCladding();
-		this.#setDoor();
-		this.#setWindows();
-		this.#setDecoration();
+		//this.#setCladding();
+		//this.#setDoor();
+		//this.#setWindows();
+		//this.#setDecoration();
 
-		// debug for now
-		console.log(this.#tileArray);
-
-		// tidy up tile array
+		return this.#tileArray;
 	}
 
+	#writeToArrayIfPossible(x, y, value) {
+
+		if (typeof this.#tileArray[x] == 'undefined' || x >= this.#tileArray.length) {
+			return;
+		}
+
+		if (typeof this.#tileArray[x][y] == 'undefined' || y >= this.#tileArray[x].length) {
+			return
+		}
+		this.#tileArray[x][y] = value;
+	}
 
 	#setRoof() {
 		let actualRoof = Roof.hatch;
@@ -79,16 +85,65 @@ export class BuildingGenerator {
 		}
 
 		// work out something nicer for the tile placeholder
-		for (let currenty = 0; currenty < this.#settings.depth * 2; currenty++) {
-			this.#tileArray[currenty] = new Array(this.#settings.width * 2)
-				.fill(Object.keys(Roof).find(key => Roof[key] === actualRoof) + "Roof")
+		// for (let currenty = 0; currenty < this.#settings.depth * 2; currenty++) {
+		// 	this.#tileArray[currenty] = new Array(this.#settings.width * 2)
+		// 		.fill(Object.keys(Roof).find(key => Roof[key] === actualRoof) + "Roof")
+		// }
+
+		if(this.#settings.depth === Depth.small) {
+
+			this.#writeToArrayIfPossible(0, 0, "SlantedRoof00")
+			this.#writeToArrayIfPossible(1, 0, "SlantedRoof01")
+			this.#writeToArrayIfPossible(0, 1, "SlantedRoof06")
+			this.#writeToArrayIfPossible(1, 1, "SlantedRoof04")
+			this.#writeToArrayIfPossible(0, 2, "SlantedRoof09")
+			this.#writeToArrayIfPossible(1, 2, "SlantedRoof10")
+
+			// left roof bits
+			//this.#tileArray[0][0] = "SlantedRoof00";			
+			//this.#tileArray[1][0] = "SlantedRoof01";
+
+			//this.#tileArray[0][1] = "SlantedRoof06";
+			//this.#tileArray[1][1] = "SlantedRoof04";
+
+			//this.#tileArray[0][2] = "SlantedRoof09";
+			//this.#tileArray[1][2] = "SlantedRoof10";
+
+
+			this.#writeToArrayIfPossible(this.#settings.width-1, 0, "SlantedRoof03")
+			this.#writeToArrayIfPossible(this.#settings.width-2, 0, "SlantedRoof02")
+			this.#writeToArrayIfPossible(this.#settings.width-1, 1, "SlantedRoof08")
+			this.#writeToArrayIfPossible(this.#settings.width-2, 1, "SlantedRoof07")
+			this.#writeToArrayIfPossible(this.#settings.width-1, 2, "SlantedRoof12")
+			this.#writeToArrayIfPossible(this.#settings.width-2, 2, "SlantedRoof11")
+
+		
+			// right roof bits
+			// this.#tileArray[this.#settings.width][0] = "SlantedRoof02";
+			// this.#tileArray[this.#settings.width-1][0] = "SlantedRoof03";
+
+			// this.#tileArray[this.#settings.width][1] = "SlantedRoof08";
+			// this.#tileArray[this.#settings.width-1][1] = "SlantedRoof07";
+
+			// this.#tileArray[this.#settings.width][2] = "SlantedRoof12";
+			// this.#tileArray[this.#settings.width-1][2] = "SlantedRoof11";
+
+
+			var horizontalRoofWidthInTiles = this.#settings.width - 2;
+			
+			for(let i = 2; i < horizontalRoofWidthInTiles; i++) {					
+				this.#writeToArrayIfPossible(i, 0, "HorizontalRoof01")
+				this.#writeToArrayIfPossible(i, 1, "HorizontalRoof02")
+				//this.#tileArray[i][0] = "HorizontalRoof01";
+				//this.#tileArray[i][1] = "HorizontalRoof02";
+			}
 		}
 	}
 
 	#setCladding() {
 		// work out something nicer for the tile placeholder
-		for (let currenty = this.#settings.depth * 2; currenty < (this.#settings.depth + this.#settings.height) * 2; currenty++) {
-			this.#tileArray[currenty] = new Array(this.#settings.width * 2)
+		for (let currenty = this.#settings.depth; currenty < this.#settings.height; currenty++) {
+			this.#tileArray[currenty] = new Array(this.#settings.width)
 				.fill(Object.keys(Cladding).find(key => Cladding[key] === this.#settings.cladding))
 		}
 	}
@@ -100,22 +155,22 @@ export class BuildingGenerator {
 		if (this.#settings.hasWindowGap) {
 
 			// save existing cladding
-			const windowGapXCoords = [Math.round(this.#settings.width * 2 / 2), Math.round(this.#settings.width * 2 / 2) - 1]
+			const windowGapXCoords = [Math.round(this.#settings.width  / 2), Math.round(this.#settings.width  / 2) - 1]
 			const windowGapCladding = [
-				this.#tileArray[this.#settings.depth * 2][windowGapXCoords[0]],
-				this.#tileArray[this.#settings.depth * 2][windowGapXCoords[1]]
+				this.#tileArray[this.#settings.depth][windowGapXCoords[0]],
+				this.#tileArray[this.#settings.depth][windowGapXCoords[1]]
 			];
 
 			// place all windows
-			this.#tileArray[(this.#settings.depth * 2)] = new Array(this.#settings.width * 2).fill("window")
+			this.#tileArray[(this.#settings.depth)] = new Array(this.#settings.width ).fill("window")
 
 			// rewrite over cladding
 			// in the future, do this differently
-			this.#tileArray[this.#settings.depth * 2][windowGapXCoords[0]] = windowGapCladding[0];
-			this.#tileArray[this.#settings.depth * 2][windowGapXCoords[1]] = windowGapCladding[1];
+			this.#tileArray[this.#settings.depth ][windowGapXCoords[0]] = windowGapCladding[0];
+			this.#tileArray[this.#settings.depth ][windowGapXCoords[1]] = windowGapCladding[1];
 
 		} else {
-			this.#tileArray[(this.#settings.depth * 2)] = new Array(this.#settings.width * 2).fill("window")
+			this.#tileArray[(this.#settings.depth)] = new Array(this.#settings.width ).fill("window")
 		}
 	}
 
@@ -133,8 +188,8 @@ export class BuildingGenerator {
 		// if a seed happens in the future, use it here to work out which position the door is
 		// perhaps weigh it closer to the centre 
 		// reword this mess of a coordinate finding
-		const doorPositionX = Math.round(this.#settings.width * 2 / 2);
-		const doorPositionY = this.#settings.height * 2 + this.#settings.depth * 2 - 1;
+		const doorPositionX = Math.round(this.#settings.width / 2);
+		const doorPositionY = this.#settings.height + this.#settings.depth - 1;
 
 		// door is double width
 		this.#tileArray[doorPositionY][doorPositionX] = "door (0,1)"
@@ -155,8 +210,8 @@ export class BuildingGenerator {
 			return;
 		}
 
-		const signPositionX = Math.round(4 * 2 / 2) - 1;
-		const signPositionY = this.#settings.height * 2 + this.#settings.depth * 2 - 1;
+		const signPositionX = Math.round(4 / 2) - 1;
+		const signPositionY = this.#settings.height  + this.#settings.depth  - 1;
 
 		if (this.#settings.decoration === Decoration.pokemonCenter) {
 			this.#tileArray[signPositionY][signPositionX] = "pokemonCenter (0,1)"

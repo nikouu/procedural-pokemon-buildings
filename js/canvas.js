@@ -1,5 +1,6 @@
 
 import { SpriteSheet } from './spriteSheet.js'
+import { BuildingGenerator } from './buildingGenerator.js'
 
 // TODO: move most of the hard coded values into a config object
 export class Canvas {
@@ -11,7 +12,7 @@ export class Canvas {
 		this.height = height;
 		this.gridSize = 48;
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
-		this.selectionCoords = new fabric.Point(this.gridSize *2, this.gridSize*2);
+		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.currentXScale = 1;
 		this.currentYScale = 1;
 
@@ -26,6 +27,8 @@ export class Canvas {
 		this.fabricCanvas.setWidth(this.width);
 		this.fabricCanvas.setHeight(this.height);
 		this.fabricCanvas.requestRenderAll();
+
+		this.buildingGenerator = new BuildingGenerator();
 
 		this.#setupGrid();
 		this.#setupSelectorRectangle();
@@ -76,7 +79,7 @@ export class Canvas {
 			"object:scaling": this.#onScaling.bind(this),
 		});
 
-		this.fabricCanvas.on('mouse:wheel', function(opt) {
+		this.fabricCanvas.on('mouse:wheel', function (opt) {
 			var delta = opt.e.deltaY;
 			var zoom = canvas.getZoom();
 			zoom *= 0.999 ** delta;
@@ -85,10 +88,10 @@ export class Canvas {
 			canvas.setZoom(zoom);
 			opt.e.preventDefault();
 			opt.e.stopPropagation();
-		  })
+		})
 	}
 
-	
+
 
 	#snap(value) {
 		return Math.round(value / this.gridSize) * this.gridSize;
@@ -111,8 +114,8 @@ export class Canvas {
 
 			objectsToMove.forEach((element) => {
 				element.set({
-					left: element.left - (this.selectionCoords.x - this.#snap(event.target.left - (this.gridSize/2))),
-					top: element.top - (this.selectionCoords.y - this.#snap(event.target.top - (this.gridSize/2)))
+					left: element.left - (this.selectionCoords.x - this.#snap(event.target.left - (this.gridSize / 2))),
+					top: element.top - (this.selectionCoords.y - this.#snap(event.target.top - (this.gridSize / 2)))
 				})
 			})
 
@@ -201,11 +204,19 @@ export class Canvas {
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
 
+		let settings = this.buildingGenerator.getSettings();
+		settings.width = attrs.scaleX;
+		settings.height = attrs.scaleY;
+		this.buildingGenerator.setSettings(settings);
+
+		let generatedBuilding = this.buildingGenerator.generate();
+
+
 		// for when the real tiles come in, perhaps have an object here that generates the tiles and asking by x,y via this loop
 		// then that generator returns 
 		// this draws top to bottom, left to right
-		for (let currentX = 0; currentX < scaledObject.scaleX; currentX++) {
-			for (let currentY = 0; currentY < scaledObject.scaleY; currentY++) {
+		for (let currentX = 0; currentX < attrs.scaleX; currentX++) {
+			for (let currentY = 0; currentY < attrs.scaleY; currentY++) {
 				// let newRect = new fabric.Rect({
 				// 	width: this.gridSize * 1,
 				// 	height: this.gridSize * 1,
@@ -219,24 +230,60 @@ export class Canvas {
 				// });
 
 				let keys = Array.from(this.spriteMap.keys());
-				var randomSprite = keys[Math.floor(Math.random() * keys.length)];
 
-			
+				try {					
 
-				// this would be a reference rather than a new object?
-				var spriteHandle = new fabric.Image(this.spriteMap.get(randomSprite));
-				spriteHandle["name"] = 'buildingTile';
-				spriteHandle["selectable"] = false;
-				spriteHandle["originX"] = 'left';
-				spriteHandle["originY"] = 'top';
-				spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
-				spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
-				
+					if (keys.includes(generatedBuilding[currentX][currentY])) {
 
-				this.fabricCanvas.add(spriteHandle);
-				this.fabricCanvas.sendToBack(spriteHandle);
+						var spriteHandle = new fabric.Image(this.spriteMap.get(generatedBuilding[currentX][currentY]));
+						spriteHandle["name"] = 'buildingTile';
+						spriteHandle["selectable"] = false;
+						spriteHandle["originX"] = 'left';
+						spriteHandle["originY"] = 'top';
+						spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
+						spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
 
-				
+
+						this.fabricCanvas.add(spriteHandle);
+						this.fabricCanvas.sendToBack(spriteHandle);
+					}
+					else {
+
+						var randomSprite = keys[Math.floor(Math.random() * keys.length)];
+
+
+
+						// this would be a reference rather than a new object?
+						var spriteHandle = new fabric.Image(this.spriteMap.get(randomSprite));
+						spriteHandle["name"] = 'buildingTile';
+						spriteHandle["selectable"] = false;
+						spriteHandle["originX"] = 'left';
+						spriteHandle["originY"] = 'top';
+						spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
+						spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
+
+
+						this.fabricCanvas.add(spriteHandle);
+						this.fabricCanvas.sendToBack(spriteHandle);
+					}
+				} catch (e) {
+					var randomSprite = keys[Math.floor(Math.random() * keys.length)];
+
+
+
+					// this would be a reference rather than a new object?
+					var spriteHandle = new fabric.Image(this.spriteMap.get(randomSprite));
+					spriteHandle["name"] = 'buildingTile';
+					spriteHandle["selectable"] = false;
+					spriteHandle["originX"] = 'left';
+					spriteHandle["originY"] = 'top';
+					spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
+					spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
+
+
+					this.fabricCanvas.add(spriteHandle);
+					this.fabricCanvas.sendToBack(spriteHandle);
+				}
 			}
 		}
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
