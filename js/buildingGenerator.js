@@ -1,4 +1,7 @@
-import { Cladding, Decoration, Depth, Roof } from './enums.js'
+import { Cladding } from './enums/Cladding.js'
+import { Decoration } from './enums/Decoration.js'
+import { Depth } from './enums/Depth.js'
+import { Roof } from './enums/Roof.js'
 
 export class BuildingGenerator {
 
@@ -53,11 +56,17 @@ export class BuildingGenerator {
 		this.#tileArray = [...Array(height * 2)].map(() => Array(this.#settings.width * 2).fill(0));
 
 
+		// create the raw tile array
 		this.#setRoof();
 		this.#setCladding();
 		this.#setDoor();
 		this.#setWindows();
 		this.#setDecoration();
+
+		// debug for now
+		console.log(this.#tileArray);
+
+		// tidy up tile array
 	}
 
 
@@ -158,6 +167,10 @@ export class BuildingGenerator {
 		}
 
 		if (this.#settings.decoration === Decoration.mart) {
+			this.#tileArray[signPositionY][signPositionX] = "mart (0,1)"
+			this.#tileArray[signPositionY - 1][signPositionX] = "mart (0,0)"
+			this.#tileArray[signPositionY][signPositionX - 1] = "mart (1,1)"
+			this.#tileArray[signPositionY - 1][signPositionX - 1] = "mart (1,0)"
 
 		}
 
