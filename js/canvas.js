@@ -217,6 +217,32 @@ export class Canvas {
 
 		let generatedBuilding = this.buildingGenerator.generate();
 
+		this.#placeTiles(attrs, generatedBuilding, scaledObject);
+		// correctly sets the values of the new selection shape size for the delta calculations in the movement
+		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
+	}
+
+	#onZooming(event) {
+		var delta = event.e.deltaY;
+		var zoom = this.fabricCanvas.getZoom();
+		zoom *= 0.999 ** delta;
+		if (zoom > 20) zoom = 20;
+		if (zoom < 0.01) zoom = 0.01;
+		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
+		event.e.preventDefault();
+		event.e.stopPropagation();
+	}
+
+	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ
+	#onMouseMoving(event) {
+		// target == null otherwise we would pan when scaling/panning the object
+		if (this.isPanning && event.target == null) {
+			const delta = new fabric.Point(event.e.movementX, event.e.movementY);
+			this.fabricCanvas.relativePan(delta);
+		}
+	}
+
+	#placeTiles(attrs, generatedBuilding, scaledObject) {
 		// this draws top to bottom, left to right
 		for (let currentX = 0; currentX < attrs.scaleX; currentX++) {
 			for (let currentY = 0; currentY < attrs.scaleY; currentY++) {
@@ -242,35 +268,11 @@ export class Canvas {
 
 				this.fabricCanvas.add(spriteHandle);
 				this.fabricCanvas.moveTo(spriteHandle, 100);
-
 			}
 		}
-		// correctly sets the values of the new selection shape size for the delta calculations in the movement
-		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
-
 		// hacky workaround to get the selection bit back on top, probably needs fixing
 		const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
 		this.fabricCanvas.bringToFront(selectionRectangle);
-	}
-
-	#onZooming(event) {
-		var delta = event.e.deltaY;
-		var zoom = this.fabricCanvas.getZoom();
-		zoom *= 0.999 ** delta;
-		if (zoom > 20) zoom = 20;
-		if (zoom < 0.01) zoom = 0.01;
-		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
-		event.e.preventDefault();
-		event.e.stopPropagation();
-	}
-
-	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ
-	#onMouseMoving(event) {
-		// target == null otherwise we would pan when scaling/panning the object
-		if (this.isPanning && event.target == null) {
-			const delta = new fabric.Point(event.e.movementX, event.e.movementY);
-			this.fabricCanvas.relativePan(delta);
-		}
 	}
 
 	async loadSprites() {
