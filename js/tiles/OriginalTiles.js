@@ -183,16 +183,14 @@ export const OriginalTiles = {
 		spriteId: 29
 	},
 
-	// the weird part of that double story building
 	OuterBuilding05 : {
-		x: 40,
+		x: 48,
 		y: 24,
 		spriteId: 30
 	},
 
-	// the weird part of that double story building
 	OuterBuilding06 : {
-		x: 48,
+		x: 56,
 		y: 24,
 		spriteId: 31
 	},

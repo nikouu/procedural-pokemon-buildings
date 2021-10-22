@@ -207,6 +207,7 @@ export class Canvas {
 		let settings = this.buildingGenerator.getSettings();
 		settings.width = attrs.scaleX;
 		settings.height = attrs.scaleY;
+		settings.depth = 4;
 		this.buildingGenerator.setSettings(settings);
 
 		let generatedBuilding = this.buildingGenerator.generate();
