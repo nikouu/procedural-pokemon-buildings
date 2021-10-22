@@ -1,3 +1,6 @@
+
+import { SpriteSheet } from './spriteSheet.js'
+
 // TODO: move most of the hard coded values into a config object
 export class Canvas {
 
@@ -6,7 +9,7 @@ export class Canvas {
 	constructor({ canvasId = "canvas", width = 600, height = 600 } = {}) {
 		this.width = width;
 		this.height = height;
-		this.gridSize = 50;
+		this.gridSize = 48;
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize *2, this.gridSize*2);
 		this.currentXScale = 1;
@@ -14,15 +17,19 @@ export class Canvas {
 
 		this.fabricCanvas = new fabric.Canvas(canvasId,
 			{
-				width: this.width,
-				height: this.height,
 				preserveObjectStacking: true
 			}
 		);
 
+		// weird fix for blurry canvas 
+		// https://stackoverflow.com/questions/30549556/fabric-js-images-blurry?rq=1
+		this.fabricCanvas.setWidth(this.width);
+		this.fabricCanvas.setHeight(this.height);
+		this.fabricCanvas.requestRenderAll();
+
 		this.#setupGrid();
 		this.#setupSelectorRectangle();
-		this.#setupEvents();		
+		this.#setupEvents();
 	}
 
 	#setupGrid() {
@@ -68,7 +75,20 @@ export class Canvas {
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
 		});
+
+		this.fabricCanvas.on('mouse:wheel', function(opt) {
+			var delta = opt.e.deltaY;
+			var zoom = canvas.getZoom();
+			zoom *= 0.999 ** delta;
+			if (zoom > 20) zoom = 20;
+			if (zoom < 0.01) zoom = 0.01;
+			canvas.setZoom(zoom);
+			opt.e.preventDefault();
+			opt.e.stopPropagation();
+		  })
 	}
+
+	
 
 	#snap(value) {
 		return Math.round(value / this.gridSize) * this.gridSize;
@@ -91,8 +111,8 @@ export class Canvas {
 
 			objectsToMove.forEach((element) => {
 				element.set({
-					left: element.left - (this.selectionCoords.x - this.#snap(event.target.left - 25)),
-					top: element.top - (this.selectionCoords.y - this.#snap(event.target.top - 25))
+					left: element.left - (this.selectionCoords.x - this.#snap(event.target.left - (this.gridSize/2))),
+					top: element.top - (this.selectionCoords.y - this.#snap(event.target.top - (this.gridSize/2)))
 				})
 			})
 
@@ -176,7 +196,7 @@ export class Canvas {
 			scaledObject.setPositionByOrigin(anchorPoint, anchorX, anchorY);
 		}
 
-		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e["name"] === 'buildingTile');
+		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
 
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
@@ -186,23 +206,47 @@ export class Canvas {
 		// this draws top to bottom, left to right
 		for (let currentX = 0; currentX < scaledObject.scaleX; currentX++) {
 			for (let currentY = 0; currentY < scaledObject.scaleY; currentY++) {
-				let newRect = new fabric.Rect({
-					width: this.gridSize * 1,
-					height: this.gridSize * 1,
-					fill: '#000',
-					name: 'buildingTile',
-					selectable: false,
-					originX: 'left',
-					originY: 'top',
-					left: scaledObject.left + (this.gridSize * currentX),
-					top: scaledObject.top + (this.gridSize * currentY)
-				});
+				// let newRect = new fabric.Rect({
+				// 	width: this.gridSize * 1,
+				// 	height: this.gridSize * 1,
+				// 	fill: '#000',
+				// 	name: 'buildingTile',
+				// 	selectable: false,
+				// 	originX: 'left',
+				// 	originY: 'top',
+				// 	left: scaledObject.left + (this.gridSize * currentX),
+				// 	top: scaledObject.top + (this.gridSize * currentY)
+				// });
 
-				this.fabricCanvas.add(newRect);
-				this.fabricCanvas.sendToBack(newRect);
+				let keys = Array.from(this.spriteMap.keys());
+				var randomSprite = keys[Math.floor(Math.random() * keys.length)];
+
+			
+
+				// this would be a reference rather than a new object?
+				var spriteHandle = new fabric.Image(this.spriteMap.get(randomSprite));
+				spriteHandle["name"] = 'buildingTile';
+				spriteHandle["selectable"] = false;
+				spriteHandle["originX"] = 'left';
+				spriteHandle["originY"] = 'top';
+				spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
+				spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
+				
+
+				this.fabricCanvas.add(spriteHandle);
+				this.fabricCanvas.sendToBack(spriteHandle);
+
+				
 			}
 		}
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
+	}
+
+	async loadSprites() {
+		let spriteSheet = new SpriteSheet("/spritesheets/original-spritesheet-6x.png", 48, 48, 6);
+		await spriteSheet.getSpriteMap().then(result => {
+			this.spriteMap = result;
+		});
 	}
 }
