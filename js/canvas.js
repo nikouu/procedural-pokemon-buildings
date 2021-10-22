@@ -39,18 +39,26 @@ export class Canvas {
 
 	#setupGrid() {
 		for (let i = 0; i < (Math.max(this.width, this.height) / this.gridSize); i++) {
-			this.fabricCanvas.add(new fabric.Line([i * this.gridSize, 0, i * this.gridSize, this.height], {
+
+			let vertialLine = new fabric.Line([i * this.gridSize, 0, i * this.gridSize, this.height], {
 				stroke: '#ccc',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
-			}));
-			this.fabricCanvas.add(new fabric.Line([0, i * this.gridSize, this.width, i * this.gridSize], {
+			});
+
+			let horizontalLine = new fabric.Line([0, i * this.gridSize, this.width, i * this.gridSize], {
 				stroke: '#ccc',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
-			}))
+			});
+
+			this.fabricCanvas.add(horizontalLine);
+			this.fabricCanvas.add(vertialLine)
+
+			this.fabricCanvas.moveTo(horizontalLine, 0);
+			this.fabricCanvas.moveTo(vertialLine, 0);
 		}
 	}
 
@@ -233,12 +241,16 @@ export class Canvas {
 				spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
 
 				this.fabricCanvas.add(spriteHandle);
-				this.fabricCanvas.sendToBack(spriteHandle);
+				this.fabricCanvas.moveTo(spriteHandle, 100);
 
 			}
 		}
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
+
+		// hacky workaround to get the selection bit back on top, probably needs fixing
+		const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
+		this.fabricCanvas.bringToFront(selectionRectangle);
 	}
 
 	#onZooming(event) {
