@@ -57,12 +57,12 @@ export class BuildingGenerator {
 		// create the raw tile array
 		this.#setRoof();
 		this.#setDoor();
-		//this.#setWindows();
-		this.#setCladding();
-
+		this.#setExterior();
+		this.#setWindows();
 		
-		//this.#setDecoration();
+		this.#setDecoration();
 
+		this.#setCladding();
 		return this.#tileArray;
 	}
 
@@ -129,13 +129,7 @@ export class BuildingGenerator {
 		}
 	}
 
-	#setCladding() {
-		// only roof exists, not big enough for the rest of the building
-		// this assumes the roof is uniform as it only grabs the first column to check
-		if (!this.#tileArray[0].includes(0)) {
-			return;
-		}
-
+	#setExterior() {
 		this.#writeToArrayIfPossible(0, this.#settings.height - 1, "OuterBuilding00");
 		this.#writeToArrayIfPossible(this.#settings.width - 1, this.#settings.height - 1, "OuterBuilding02");
 
@@ -149,7 +143,9 @@ export class BuildingGenerator {
 		for (let i = 1; i < this.#settings.width - 1; i++) {
 			this.#writeToArrayIfPossible(i, this.#settings.height - 1, "OuterBuilding01");
 		}
+	}
 
+	#setCladding() {
 		for (let x = 1; x < this.#settings.width - 1; x++) {
 			for (let y = this.#settings.depth; y < this.#settings.height - 1; y++) {
 				if (this.#settings.cladding == Cladding.wood) {
@@ -164,27 +160,8 @@ export class BuildingGenerator {
 
 	// need to work out better window settings
 	#setWindows() {
-		// for now, put windows in the top array of height
-
-		if (this.#settings.hasWindowGap) {
-
-			// save existing cladding
-			const windowGapXCoords = [Math.round(this.#settings.width / 2), Math.round(this.#settings.width / 2) - 1]
-			const windowGapCladding = [
-				this.#tileArray[this.#settings.depth][windowGapXCoords[0]],
-				this.#tileArray[this.#settings.depth][windowGapXCoords[1]]
-			];
-
-			// place all windows
-			this.#tileArray[(this.#settings.depth)] = new Array(this.#settings.width).fill("window")
-
-			// rewrite over cladding
-			// in the future, do this differently
-			this.#tileArray[this.#settings.depth][windowGapXCoords[0]] = windowGapCladding[0];
-			this.#tileArray[this.#settings.depth][windowGapXCoords[1]] = windowGapCladding[1];
-
-		} else {
-			this.#tileArray[(this.#settings.depth)] = new Array(this.#settings.width).fill("window")
+		for (let x = 1; x < this.#settings.width - 1; x++) {
+			this.#writeToArrayIfPossible(x, this.#settings.depth, "RegularWindow");
 		}
 	}
 
@@ -206,12 +183,12 @@ export class BuildingGenerator {
 
 		// if a seed happens in the future, use it here to work out which position the door is
 		// perhaps weigh it closer to the centre, but not true centre
-		let doorXValue = Math.round((this.#settings.width - 1) * (1/2));
+		let doorXValue = Math.round((this.#settings.width - 2) * (1 / 2));
 		if (this.#settings.width == 4) {
 			doorXValue = 2;
 		}
 
-		this.#writeToArrayIfPossible(doorXValue- 1, this.#settings.height - 2, "Door00");
+		this.#writeToArrayIfPossible(doorXValue - 1, this.#settings.height - 2, "Door00");
 		this.#writeToArrayIfPossible(doorXValue, this.#settings.height - 2, "Door01");
 		this.#writeToArrayIfPossible(doorXValue - 1, this.#settings.height - 1, "Door02");
 		this.#writeToArrayIfPossible(doorXValue, this.#settings.height - 1, "Door03");
@@ -224,29 +201,27 @@ export class BuildingGenerator {
 			return;
 		}
 
-		// too small to have a door and a sign, though this statement is also including gym signs...
-		if (this.#settings.hasDoor && this.#settings.width < 4) {
+		// too small (width) to have a door and a sign, though this statement is also including gym signs...
+		if (this.#settings.hasDoor && this.#settings.width < 8) {
 			return;
 		}
 
+		// too small (height)
+		if ((this.#settings.height - this.#settings.depth) < 4) {
+			return;
+		}
 
-
-		const signPositionX = Math.round(4 / 2) - 1;
-		const signPositionY = this.#settings.height + this.#settings.depth - 1;
-
+		let signXValue = Math.round((this.#settings.width - 2) * (1 / 2));
 		if (this.#settings.decoration === Decoration.pokemonCenter) {
-			this.#tileArray[signPositionY][signPositionX] = "pokemonCenter (0,1)"
-			this.#tileArray[signPositionY - 1][signPositionX] = "pokemonCenter (0,0)"
-			this.#tileArray[signPositionY][signPositionX - 1] = "pokemonCenter (1,1)"
-			this.#tileArray[signPositionY - 1][signPositionX - 1] = "pokemonCenter (1,0)"
-
+			
+			this.#writeToArrayIfPossible(signXValue + 1, this.#settings.height - 2, "PokemonCenterLeft");
+			this.#writeToArrayIfPossible(signXValue + 2, this.#settings.height - 2, "PokemonCenterRight");
+			this.#writeToArrayIfPossible(signXValue + 1,  this.#settings.height - 1, "DecorationSignBase", true);
+			this.#writeToArrayIfPossible(signXValue + 2, this.#settings.height - 1, "DecorationSignBase", true);
 		}
 
 		if (this.#settings.decoration === Decoration.mart) {
-			this.#tileArray[signPositionY][signPositionX] = "mart (0,1)"
-			this.#tileArray[signPositionY - 1][signPositionX] = "mart (0,0)"
-			this.#tileArray[signPositionY][signPositionX - 1] = "mart (1,1)"
-			this.#tileArray[signPositionY - 1][signPositionX - 1] = "mart (1,0)"
+
 
 		}
 
