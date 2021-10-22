@@ -13,12 +13,14 @@ export class Canvas {
 		this.gridSize = 48;
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
+		this.isPanning = false;
 		this.currentXScale = 1;
 		this.currentYScale = 1;
 
 		this.fabricCanvas = new fabric.Canvas(canvasId,
 			{
-				preserveObjectStacking: true
+				preserveObjectStacking: true,
+				selection: false
 			}
 		);
 
@@ -39,11 +41,15 @@ export class Canvas {
 		for (let i = 0; i < (Math.max(this.width, this.height) / this.gridSize); i++) {
 			this.fabricCanvas.add(new fabric.Line([i * this.gridSize, 0, i * this.gridSize, this.height], {
 				stroke: '#ccc',
-				selectable: false
+				selectable: false,
+				name: 'grid',
+				hoverCursor: 'default'
 			}));
 			this.fabricCanvas.add(new fabric.Line([0, i * this.gridSize, this.width, i * this.gridSize], {
 				stroke: '#ccc',
-				selectable: false
+				selectable: false,
+				name: 'grid',
+				hoverCursor: 'default'
 			}))
 		}
 	}
@@ -77,21 +83,12 @@ export class Canvas {
 		this.fabricCanvas.on({
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
+			'mouse:wheel': this.#onZooming.bind(this),
+			'mouse:up': () => { this.isPanning = false; },
+			'mouse:down': () => { this.isPanning = true; },
+			'mouse:move': this.#onMouseMoving.bind(this)
 		});
-
-		this.fabricCanvas.on('mouse:wheel', function (opt) {
-			var delta = opt.e.deltaY;
-			var zoom = canvas.getZoom();
-			zoom *= 0.999 ** delta;
-			if (zoom > 20) zoom = 20;
-			if (zoom < 0.01) zoom = 0.01;
-			canvas.setZoom(zoom);
-			opt.e.preventDefault();
-			opt.e.stopPropagation();
-		})
 	}
-
-
 
 	#snap(value) {
 		return Math.round(value / this.gridSize) * this.gridSize;
@@ -212,83 +209,56 @@ export class Canvas {
 
 		let generatedBuilding = this.buildingGenerator.generate();
 
-
-		// for when the real tiles come in, perhaps have an object here that generates the tiles and asking by x,y via this loop
-		// then that generator returns 
 		// this draws top to bottom, left to right
 		for (let currentX = 0; currentX < attrs.scaleX; currentX++) {
 			for (let currentY = 0; currentY < attrs.scaleY; currentY++) {
-				// let newRect = new fabric.Rect({
-				// 	width: this.gridSize * 1,
-				// 	height: this.gridSize * 1,
-				// 	fill: '#000',
-				// 	name: 'buildingTile',
-				// 	selectable: false,
-				// 	originX: 'left',
-				// 	originY: 'top',
-				// 	left: scaledObject.left + (this.gridSize * currentX),
-				// 	top: scaledObject.top + (this.gridSize * currentY)
-				// });
 
 				let keys = Array.from(this.spriteMap.keys());
+				let spriteHandle;
 
-				try {					
-
-					if (keys.includes(generatedBuilding[currentX][currentY])) {
-
-						var spriteHandle = new fabric.Image(this.spriteMap.get(generatedBuilding[currentX][currentY]));
-						spriteHandle["name"] = 'buildingTile';
-						spriteHandle["selectable"] = false;
-						spriteHandle["originX"] = 'left';
-						spriteHandle["originY"] = 'top';
-						spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
-						spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
-
-
-						this.fabricCanvas.add(spriteHandle);
-						this.fabricCanvas.sendToBack(spriteHandle);
-					}
-					else {
-
-						var randomSprite = keys[Math.floor(Math.random() * keys.length)];
-
-
-
-						// this would be a reference rather than a new object?
-						var spriteHandle = new fabric.Image(this.spriteMap.get(randomSprite));
-						spriteHandle["name"] = 'buildingTile';
-						spriteHandle["selectable"] = false;
-						spriteHandle["originX"] = 'left';
-						spriteHandle["originY"] = 'top';
-						spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
-						spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
-
-
-						this.fabricCanvas.add(spriteHandle);
-						this.fabricCanvas.sendToBack(spriteHandle);
-					}
-				} catch (e) {
-					var randomSprite = keys[Math.floor(Math.random() * keys.length)];
-
-
-
-					// this would be a reference rather than a new object?
-					var spriteHandle = new fabric.Image(this.spriteMap.get(randomSprite));
-					spriteHandle["name"] = 'buildingTile';
-					spriteHandle["selectable"] = false;
-					spriteHandle["originX"] = 'left';
-					spriteHandle["originY"] = 'top';
-					spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
-					spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
-
-
-					this.fabricCanvas.add(spriteHandle);
-					this.fabricCanvas.sendToBack(spriteHandle);
+				if (keys.includes(generatedBuilding[currentX][currentY])) {
+					const spriteReference = this.spriteMap.get(generatedBuilding[currentX][currentY]);
+					spriteHandle = new fabric.Image(spriteReference);
 				}
+				else {
+					const randomSpriteReference = keys[Math.floor(Math.random() * keys.length)];
+					spriteHandle = new fabric.Image(this.spriteMap.get(randomSpriteReference));
+				}
+
+				spriteHandle["name"] = 'buildingTile';
+				spriteHandle["selectable"] = false;
+				spriteHandle["originX"] = 'left';
+				spriteHandle["originY"] = 'top';
+				spriteHandle["left"] = scaledObject.left + (this.gridSize * currentX);
+				spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
+
+				this.fabricCanvas.add(spriteHandle);
+				this.fabricCanvas.sendToBack(spriteHandle);
+
 			}
 		}
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
+	}
+
+	#onZooming(event) {
+		var delta = event.e.deltaY;
+		var zoom = this.fabricCanvas.getZoom();
+		zoom *= 0.999 ** delta;
+		if (zoom > 20) zoom = 20;
+		if (zoom < 0.01) zoom = 0.01;
+		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
+		event.e.preventDefault();
+		event.e.stopPropagation();
+	}
+
+	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ
+	#onMouseMoving(event) {
+		// target == null otherwise we would pan when scaling/panning the object
+		if (this.isPanning && event.target == null) {
+			const delta = new fabric.Point(event.e.movementX, event.e.movementY);
+			this.fabricCanvas.relativePan(delta);
+		}
 	}
 
 	async loadSprites() {
