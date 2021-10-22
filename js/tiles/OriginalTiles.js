@@ -261,13 +261,13 @@ export const OriginalTiles = {
 		spriteId: 42
 	},
 
-	MartLeft : {
+	PokeMartLeft : {
 		x: 24,
 		y: 40,
 		spriteId: 43
 	},
 
-	MartRight : {
+	PokeMartRight : {
 		x: 32,
 		y: 40,
 		spriteId: 44

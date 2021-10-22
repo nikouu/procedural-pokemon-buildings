@@ -17,7 +17,7 @@ export class BuildingGenerator {
 		hasDoor: true,
 		hasWindowGap: true,
 		cladding: Cladding.brick,
-		decoration: Decoration.pokemonCenter,
+		decoration: Decoration.pokemart,
 		depth: Depth.small
 	}
 
@@ -220,9 +220,11 @@ export class BuildingGenerator {
 			this.#writeToArrayIfPossible(signXValue + 2, this.#settings.height - 1, "DecorationSignBase", true);
 		}
 
-		if (this.#settings.decoration === Decoration.mart) {
-
-
+		if (this.#settings.decoration === Decoration.pokemart) {
+			this.#writeToArrayIfPossible(signXValue + 1, this.#settings.height - 2, "PokeMartLeft");
+			this.#writeToArrayIfPossible(signXValue + 2, this.#settings.height - 2, "PokeMartRight");
+			this.#writeToArrayIfPossible(signXValue + 1,  this.#settings.height - 1, "DecorationSignBase", true);
+			this.#writeToArrayIfPossible(signXValue + 2, this.#settings.height - 1, "DecorationSignBase", true);
 		}
 
 		if (this.#settings.decoration === Decoration.gym) {
