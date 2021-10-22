@@ -56,15 +56,17 @@ export class BuildingGenerator {
 
 		// create the raw tile array
 		this.#setRoof();
-		//this.#setCladding();
-		//this.#setDoor();
+		this.#setDoor();
 		//this.#setWindows();
+		this.#setCladding();
+
+		
 		//this.#setDecoration();
 
 		return this.#tileArray;
 	}
 
-	#writeToArrayIfPossible(x, y, value) {
+	#writeToArrayIfPossible(x, y, value, canOverwrite = false) {
 
 		if (typeof this.#tileArray[x] == 'undefined' || x >= this.#tileArray.length) {
 			return;
@@ -73,7 +75,12 @@ export class BuildingGenerator {
 		if (typeof this.#tileArray[x][y] == 'undefined' || y >= this.#tileArray[x].length) {
 			return
 		}
-		this.#tileArray[x][y] = value;
+
+		if (this.#tileArray[x][y] !== 0 && canOverwrite) {
+			this.#tileArray[x][y] = value;
+		} else if (this.#tileArray[x][y] === 0) {
+			this.#tileArray[x][y] = value;
+		}
 	}
 
 	#setRoof() {
@@ -123,10 +130,35 @@ export class BuildingGenerator {
 	}
 
 	#setCladding() {
-		// work out something nicer for the tile placeholder
-		for (let currenty = this.#settings.depth; currenty < this.#settings.height; currenty++) {
-			this.#tileArray[currenty] = new Array(this.#settings.width)
-				.fill(Object.keys(Cladding).find(key => Cladding[key] === this.#settings.cladding))
+		// only roof exists, not big enough for the rest of the building
+		// this assumes the roof is uniform as it only grabs the first column to check
+		if (!this.#tileArray[0].includes(0)) {
+			return;
+		}
+
+		this.#writeToArrayIfPossible(0, this.#settings.height - 1, "OuterBuilding00");
+		this.#writeToArrayIfPossible(this.#settings.width - 1, this.#settings.height - 1, "OuterBuilding02");
+
+		const bottomOfRoof = this.#settings.depth;
+
+		for (let i = bottomOfRoof; i < this.#settings.height - 1; i++) {
+			this.#writeToArrayIfPossible(0, i, "OuterBuilding03");
+			this.#writeToArrayIfPossible(this.#settings.width - 1, i, "OuterBuilding04");
+		}
+
+		for (let i = 1; i < this.#settings.width - 1; i++) {
+			this.#writeToArrayIfPossible(i, this.#settings.height - 1, "OuterBuilding01");
+		}
+
+		for (let x = 1; x < this.#settings.width - 1; x++) {
+			for (let y = this.#settings.depth; y < this.#settings.height - 1; y++) {
+				if (this.#settings.cladding == Cladding.wood) {
+					this.#writeToArrayIfPossible(x, y, "WoodCladding");
+				} else if (this.#settings.cladding == Cladding.brick) {
+					this.#writeToArrayIfPossible(x, y, "BrickCladding");
+				}
+
+			}
 		}
 	}
 
@@ -167,17 +199,22 @@ export class BuildingGenerator {
 			return;
 		}
 
-		// if a seed happens in the future, use it here to work out which position the door is
-		// perhaps weigh it closer to the centre 
-		// reword this mess of a coordinate finding
-		const doorPositionX = Math.round(this.#settings.width / 2);
-		const doorPositionY = this.#settings.height + this.#settings.depth - 1;
+		// not tall enough for a door
+		if (this.#settings.height <= this.#settings.depth + 2) {
+			return;
+		}
 
-		// door is double width
-		this.#tileArray[doorPositionY][doorPositionX] = "door (0,1)"
-		this.#tileArray[doorPositionY - 1][doorPositionX] = "door (0,0)"
-		this.#tileArray[doorPositionY][doorPositionX + 1] = "door (1,1)"
-		this.#tileArray[doorPositionY - 1][doorPositionX + 1] = "door (1,0)"
+		// if a seed happens in the future, use it here to work out which position the door is
+		// perhaps weigh it closer to the centre, but not true centre
+		let doorXValue = Math.round((this.#settings.width - 1) * (1/2));
+		if (this.#settings.width == 4) {
+			doorXValue = 2;
+		}
+
+		this.#writeToArrayIfPossible(doorXValue- 1, this.#settings.height - 2, "Door00");
+		this.#writeToArrayIfPossible(doorXValue, this.#settings.height - 2, "Door01");
+		this.#writeToArrayIfPossible(doorXValue - 1, this.#settings.height - 1, "Door02");
+		this.#writeToArrayIfPossible(doorXValue, this.#settings.height - 1, "Door03");
 	}
 
 	// work out later how to maybe make them not aware of each other?
@@ -191,6 +228,8 @@ export class BuildingGenerator {
 		if (this.#settings.hasDoor && this.#settings.width < 4) {
 			return;
 		}
+
+
 
 		const signPositionX = Math.round(4 / 2) - 1;
 		const signPositionY = this.#settings.height + this.#settings.depth - 1;
