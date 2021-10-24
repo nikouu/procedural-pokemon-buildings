@@ -1,4 +1,3 @@
-
 import { SpriteSheet } from './spriteSheet.js'
 import { BuildingGenerator } from './buildingGenerator.js'
 
@@ -105,6 +104,7 @@ export class Canvas {
 
 		this.fabricCanvas.add(selectionRect);
 		this.fabricCanvas.bringToFront(selectionRect);
+		this.fabricCanvas.setActiveObject(selectionRect);
 	}
 
 	#setupEvents() {
@@ -235,23 +235,11 @@ export class Canvas {
 		if (scaledObject.left < (-this.gridSize / 2) - 1 // this because the object, due to scaling i think, can go slightly over, so this ensures within the snap calculation
 			|| scaledObject.top < (-this.gridSize / 2) - 1
 			|| scaledObject.left + scaledObject.scaleX * this.gridSize > this.maxWidth
-			|| scaledObject.top + scaledObject.scaleY * this.gridSize > this.maxHeight
-		) {
+			|| scaledObject.top + scaledObject.scaleY * this.gridSize > this.maxHeight) {
 			attrs.scaleX = this.currentXScale;
 			attrs.scaleY = this.currentYScale;
-
-			// SCALED OBJECT UPDATES THE LOOP BEFORE BOUNDING RECT
-			// THIS MEANS BOUNDING RECT IS BEHIND AND BY THE TIME IT UPDATES
-			// THE BAD VALUES HAVE ALREADY BEEN WRITTEN TO THIS.CURRENTXSCALE ETC
-			console.log("out of bounds");
-
-
 			updateScale = false;
 		}
-
-		console.log(scaledObject)
-
-		console.log(`${scaledObject.left + scaledObject.scaleX * this.gridSize} > ${this.maxWidth} : ${scaledObject.left + scaledObject.scaleX * this.gridSize > this.maxWidth}`)
 
 		if (attrs.scaleX !== scaledObject.scaleX || attrs.scaleY !== scaledObject.scaleY) {
 			console.log(attrs)
@@ -281,8 +269,6 @@ export class Canvas {
 		this.#placeTiles(attrs, generatedBuilding, scaledObject);
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
-
-		console.log("----")
 
 	}
 
