@@ -55,3 +55,20 @@
     bottom: 0;
     margin: auto; /* presto! */
 }
+
+.bold {
+    font-weight: bold;
+}
+
+.padding-10 {
+    padding: 10px;
+}
+
+.padding-20 {
+    padding: 20px;
+}
+
+#buildingCode {
+    font-size: 30px;
+    width:300px;
+}

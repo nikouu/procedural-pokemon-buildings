@@ -14,31 +14,105 @@
         <h1 class="pokemon-font">Procedural Pokémon Building Generation</h1>
         <h2 class="pokemon-font">Generation one style Pokémon buildings</h2>
     </div>
-    
+
     <div class="grid sg-grid" style="background-color: rgb(114, 71, 71)">
-        <div id="loading">          
-            <div class="overlay" style="opacity: 0.7">               
-            </div>       
-            <img src="loading.gif" style="opacity: 1;"/>   
+        <div id="loading">
+            <div class="overlay" style="opacity: 0.7">
+            </div>
+            <img src="loading.gif" style="opacity: 1;" />
         </div>
-        
+
         <div class="col col-lg" style="background-color: rgb(248, 157, 175); width:700px;">
             <canvas id="canvas"></canvas>
-        </div>    
-        <div class="col col-lg pokemon-font" style="background-color: rgb(175, 248, 157);">
-            other stuff
         </div>
-    </div>  
+        <div class="col col-lg pokemon-font text-center" style="background-color: rgb(175, 248, 157);">
+            <h3>Settings</h3>
 
-    <div class="">
+            <div class="padding-10">
+                <div class="bold">Roof</div>
+
+                <input type="radio" id="roofSmall" name="roof" value="small" checked>
+                <label for="roofSmall">Small</label>
+
+                <input type="radio" id="roofMedium" name="roof" value="medium">
+                <label for="roofMedium">Medium</label>
+
+                <input type="radio" id="roofLarge" name="roof" value="large">
+                <label for="roofLarge">Large</label>
+            </div>
+
+            <div class="padding-10">
+                <div class="bold">Door</div>
+
+                <input type="radio" id="hasDoorTrue" name="hasDoor" value="true" checked>
+                <label for="hasDoorTrue">Yes</label>
+
+                <input type="radio" id="hasDoorFalse" name="hasDoor" value="false">
+                <label for="hasDoorFalse">No</label>
+            </div>
+            <div class="padding-10">
+                <div class="bold">Window Gap</div>
+
+                <input type="radio" id="hasWindowGapTrue" name="hasWindowGap" value="true" checked>
+                <label for="hasWindowGapTrue">Yes</label>
+
+                <input type="radio" id="hasWindowGapFalse" name="hasWindowGap" value="false">
+                <label for="hasWindowGapFalse">No</label>
+
+            </div>
+            <div class="padding-10">
+                <div class="bold">Cladding</div>
+
+                <input type="radio" id="claddingBrick" name="cladding" value="brick" checked>
+                <label for="claddingBrick">Brick</label>
+
+                <input type="radio" id="claddingWood" name="cladding" value="wood">
+                <label for="claddingWood">Wood</label>
+
+            </div>
+            <div class="padding-10">
+                <div class="bold">Decoration</div>
+
+                <input type="radio" id="decorationNone" name="decoration" value="none">
+                <label for="decorationNone">None</label>
+
+                <input type="radio" id="decorationPokemonCenter" name="decoration" value="pokemonCenter" checked>
+                <label for="decorationPokemonCenter">Pokémon Center</label>
+
+                <input type="radio" id="decorationPokemart" name="decoration" value="pokemart">
+                <label for="decorationPokemart">Poké Mart</label>
+
+                <input type="radio" id="decorationGym" name="decoration" value="gym">
+                <label for="decorationGym">Gym</label>
+
+                <input type="radio" id="decorationDoubleGym" name="decoration" value="doubleGym">
+                <label for="decorationDoubleGym">Double Gym</label>
+            </div>          
+
+            <div class="padding-20">
+                <div class="bold">Code</div>
+                <input id="buildingCode" class="pokemon-font text-center" type="text" />
+            </div>
+
+            <div class="padding-20">
+                <button>Generate</button>
+                <button>Random</button>
+            </div>
+        </div>
+    </div>
+
+    <div>
         <p>Hi :)</p>
-        <p>I made this for fun during my 2021 Pokémon binge.</p>        
+        <p>I made this for fun during my 2021 Pokémon binge.</p>
         <p>Inspired by:</p>
         <ul>
-            <li><a target="_blank" href="https://0x72.itch.io/2bitcharactergenerator">2BitCharactersGenerator</a> by <a target="_blank" href=https://0x72.itch.io/>0x72</a></li>
+            <li><a target="_blank" href="https://0x72.itch.io/2bitcharactergenerator">2BitCharactersGenerator</a> by <a
+                    target="_blank" href=https://0x72.itch.io />0x72</a></li>
             <li>Anything by <a target="_blank" href="https://twitter.com/OskSta">Oskar Stålberg</a></li>
         </ul>
-        <p>Reference for this work in my post <a target="_blank" href="https://www.nikouusitalo.com/blog/looking-at-pixels-part-3-lets-look-at-each-building-type-in-gen-1-pokemon/">Looking At Pixels Part 3: Let's Look at Each Building Type in Gen 1 Pokémon</a>.</p>
+        <p>Reference for this work in my post <a target="_blank"
+                href="https://www.nikouusitalo.com/blog/looking-at-pixels-part-3-lets-look-at-each-building-type-in-gen-1-pokemon/">Looking
+                At Pixels Part 3: Let's Look at Each Building Type in Gen 1 Pokémon</a>.</p>
         <p>See more of my stuff at: <a target="_blank" href="https://www.nikouusitalo.com/">nikouusitalo.com</a></p>
     </div>
 </body>
