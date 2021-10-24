@@ -13,7 +13,7 @@ export class Canvas {
 		this.gridSize = 48;
 
 		this.maxWidth = 1000;
-		this.maxHeight = 1000;
+		this.maxHeight = 500;
 
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
@@ -45,11 +45,10 @@ export class Canvas {
 	}
 
 	#setupGrid() {
-		const maxDimension = Math.max(this.maxWidth, this.maxHeight) / this.gridSize;
-		for (let i = 0; i < maxDimension; i++) {
-
+		for (let i = 0; i < this.maxWidth / this.gridSize; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
-			const verticalEndingOffset = Math.ceil(this.maxWidth / this.gridSize)
+			// the -1 is such that the bottom right corner is covered
+			const verticalEndingOffset = this.maxHeight % this.gridSize - 1;
 			const vertialStartCoords = [i * this.gridSize, 0];
 			const verticalEndCoords = [i * this.gridSize, this.maxHeight - verticalEndingOffset];
 
@@ -60,8 +59,14 @@ export class Canvas {
 				hoverCursor: 'default'
 			});
 
+			this.fabricCanvas.add(vertialLine)
+			this.fabricCanvas.moveTo(vertialLine, 0);
+		}
+
+		for (let i = 0; i < this.maxHeight / this.gridSize; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
-			const horizontalEndingOffset = Math.ceil(this.maxHeight / this.gridSize)
+			// the -1 is such that the bottom right corner is covered
+			const horizontalEndingOffset = this.maxWidth % this.gridSize - 1;
 			const horizontalStartCoords = [0, i * this.gridSize];
 			const horizontalEndCoords = [this.maxWidth - horizontalEndingOffset, i * this.gridSize]
 
@@ -72,11 +77,8 @@ export class Canvas {
 				hoverCursor: 'default'
 			});
 
-			this.fabricCanvas.add(horizontalLine);
-			this.fabricCanvas.add(vertialLine)
-
+			this.fabricCanvas.add(horizontalLine);	
 			this.fabricCanvas.moveTo(horizontalLine, 0);
-			this.fabricCanvas.moveTo(vertialLine, 0);
 		}
 	}
 
