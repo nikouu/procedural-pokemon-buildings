@@ -232,6 +232,7 @@ export class Canvas {
 		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
 		event.e.preventDefault();
 		event.e.stopPropagation();
+		console.log(zoom);
 	}
 
 	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ

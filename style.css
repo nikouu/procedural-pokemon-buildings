@@ -1,3 +1,26 @@
+/* https://www.fontspace.com/pokemon-gb-font-f9621 */
+@font-face {
+    font-family: 'Pokemon GB';
+    src: url('PokemonGb-RAeo.ttf');
+}
+
+.pokemon-font {
+    font-family: 'Pokemon GB';
+}
+
+.text-center {
+    text-align: center;
+}
+
+.content {
+    max-width: 1800px;
+}
+
+.margin-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .sg-grid .col {
     position: relative;
     min-height: 40px;
@@ -6,14 +29,4 @@
     line-height: 32px;
 	background-color: #283A45;
 	margin: 0 8px;
-}
-
-.pokemon-font {
-    font-family: 'Pokemon GB';
-}
-
-/* https://www.fontspace.com/pokemon-gb-font-f9621 */
-@font-face {
-    font-family: 'Pokemon GB';
-    src: url('PokemonGb-RAeo.ttf');
 }
