@@ -354,4 +354,20 @@ export class Canvas {
 			this.spriteMap = result;
 		});
 	}
+
+	getX() {
+		return this.selectionCoords.x;
+	}
+
+	getY() {
+		return this.selectionCoords.y;
+	}
+
+	getWidth() {
+		return this.currentXScale;
+	}
+
+	getHeight() {
+		return this.currentYScale;
+	}
 }

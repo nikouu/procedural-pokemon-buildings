@@ -1,7 +1,8 @@
 export const Decoration = {
-	none: "none",
-	gym: "gym",
-	doubleGym: "doubleGym",
-	pokemart: "pokemart",
-	pokemonCenter: "pokemonCenter"
+	none: 0,
+	pokemonCenter: 1,
+	pokemart: 2,
+	gym: 3,
+	doubleGym: 4,
+
 }

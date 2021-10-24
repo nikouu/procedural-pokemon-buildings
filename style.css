@@ -70,5 +70,13 @@
 
 #buildingCode {
     font-size: 30px;
-    width:300px;
+    width:650px;
+}
+
+input[type="radio"] {
+    cursor: pointer;
+}
+
+label {
+    cursor: pointer;
 }

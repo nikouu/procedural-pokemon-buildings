@@ -25,80 +25,82 @@
         <div class="col col-lg" style="background-color: rgb(248, 157, 175); width:700px;">
             <canvas id="canvas"></canvas>
         </div>
-        <div class="col col-lg pokemon-font text-center" style="background-color: rgb(175, 248, 157);">
-            <h3>Settings</h3>
+        <form id="settings">
+            <div class="col col-lg pokemon-font text-center" style="background-color: rgb(175, 248, 157);">
+                <h3>Settings</h3>
 
-            <div class="padding-10">
-                <div class="bold">Roof</div>
+                <div class="padding-10">
+                    <div class="bold">Roof</div>
 
-                <input type="radio" id="roofSmall" name="roof" value="small" checked>
-                <label for="roofSmall">Small</label>
+                    <input type="radio" id="roofSmall" name="roof" value="0" checked>
+                    <label for="roofSmall">Small</label>
 
-                <input type="radio" id="roofMedium" name="roof" value="medium">
-                <label for="roofMedium">Medium</label>
+                    <input type="radio" id="roofMedium" name="roof" value="1">
+                    <label for="roofMedium">Medium</label>
 
-                <input type="radio" id="roofLarge" name="roof" value="large">
-                <label for="roofLarge">Large</label>
+                    <input type="radio" id="roofLarge" name="roof" value="2">
+                    <label for="roofLarge">Large</label>
+                </div>
+
+                <div class="padding-10">
+                    <div class="bold">Door</div>
+
+                    <input type="radio" id="hasDoorTrue" name="hasDoor" value="1" checked>
+                    <label for="hasDoorTrue">Yes</label>
+
+                    <input type="radio" id="hasDoorFalse" name="hasDoor" value="0">
+                    <label for="hasDoorFalse">No</label>
+                </div>
+                <div class="padding-10">
+                    <div class="bold">Window Gap</div>
+
+                    <input type="radio" id="hasWindowGapTrue" name="hasWindowGap" value="1" checked>
+                    <label for="hasWindowGapTrue">Yes</label>
+
+                    <input type="radio" id="hasWindowGapFalse" name="hasWindowGap" value="0">
+                    <label for="hasWindowGapFalse">No</label>
+
+                </div>
+                <div class="padding-10">
+                    <div class="bold">Cladding</div>
+
+                    <input type="radio" id="claddingBrick" name="cladding" value="0" checked>
+                    <label for="claddingBrick">Brick</label>
+
+                    <input type="radio" id="claddingWood" name="cladding" value="1">
+                    <label for="claddingWood">Wood</label>
+
+                </div>
+                <div class="padding-10">
+                    <div class="bold">Decoration</div>
+
+                    <input type="radio" id="decorationNone" name="decoration" value="0">
+                    <label for="decorationNone">None</label>
+
+                    <input type="radio" id="decorationPokemonCenter" name="decoration" value="1" checked>
+                    <label for="decorationPokemonCenter">Pokémon Center</label>
+
+                    <input type="radio" id="decorationPokemart" name="decoration" value="2">
+                    <label for="decorationPokemart">Poké Mart</label>
+
+                    <input type="radio" id="decorationGym" name="decoration" value="3">
+                    <label for="decorationGym">Gym</label>
+
+                    <input type="radio" id="decorationDoubleGym" name="decoration" value="4">
+                    <label for="decorationDoubleGym">Double Gym</label>
+                </div>
+
+                <div class="padding-20">
+                    <div class="bold">Code</div>
+                    <input id="buildingCode" class="pokemon-font text-center" type="text" />
+                </div>
+
+                <div class="padding-20">
+                    <button type="button" id="generateButton">Generate</button>
+                    <button type="button" id="randomButton">Random</button>
+                </div>
             </div>
-
-            <div class="padding-10">
-                <div class="bold">Door</div>
-
-                <input type="radio" id="hasDoorTrue" name="hasDoor" value="true" checked>
-                <label for="hasDoorTrue">Yes</label>
-
-                <input type="radio" id="hasDoorFalse" name="hasDoor" value="false">
-                <label for="hasDoorFalse">No</label>
-            </div>
-            <div class="padding-10">
-                <div class="bold">Window Gap</div>
-
-                <input type="radio" id="hasWindowGapTrue" name="hasWindowGap" value="true" checked>
-                <label for="hasWindowGapTrue">Yes</label>
-
-                <input type="radio" id="hasWindowGapFalse" name="hasWindowGap" value="false">
-                <label for="hasWindowGapFalse">No</label>
-
-            </div>
-            <div class="padding-10">
-                <div class="bold">Cladding</div>
-
-                <input type="radio" id="claddingBrick" name="cladding" value="brick" checked>
-                <label for="claddingBrick">Brick</label>
-
-                <input type="radio" id="claddingWood" name="cladding" value="wood">
-                <label for="claddingWood">Wood</label>
-
-            </div>
-            <div class="padding-10">
-                <div class="bold">Decoration</div>
-
-                <input type="radio" id="decorationNone" name="decoration" value="none">
-                <label for="decorationNone">None</label>
-
-                <input type="radio" id="decorationPokemonCenter" name="decoration" value="pokemonCenter" checked>
-                <label for="decorationPokemonCenter">Pokémon Center</label>
-
-                <input type="radio" id="decorationPokemart" name="decoration" value="pokemart">
-                <label for="decorationPokemart">Poké Mart</label>
-
-                <input type="radio" id="decorationGym" name="decoration" value="gym">
-                <label for="decorationGym">Gym</label>
-
-                <input type="radio" id="decorationDoubleGym" name="decoration" value="doubleGym">
-                <label for="decorationDoubleGym">Double Gym</label>
-            </div>          
-
-            <div class="padding-20">
-                <div class="bold">Code</div>
-                <input id="buildingCode" class="pokemon-font text-center" type="text" />
-            </div>
-
-            <div class="padding-20">
-                <button>Generate</button>
-                <button>Random</button>
-            </div>
-        </div>
+        </form>
     </div>
 
     <div>
