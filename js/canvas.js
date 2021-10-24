@@ -11,9 +11,15 @@ export class Canvas {
 		this.width = width;
 		this.height = height;
 		this.gridSize = 48;
+
+		this.maxWidth = 1000;
+		this.maxHeight = 1000;
+
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.isPanning = false;
+
+		// move these to a new object
 		this.currentXScale = 1;
 		this.currentYScale = 1;
 
@@ -39,17 +45,28 @@ export class Canvas {
 	}
 
 	#setupGrid() {
-		for (let i = 0; i < (Math.max(this.width, this.height) / this.gridSize); i++) {
+		const maxDimension = Math.max(this.maxWidth, this.maxHeight) / this.gridSize;
+		for (let i = 0; i < maxDimension; i++) {
 
-			let vertialLine = new fabric.Line([i * this.gridSize, 0, i * this.gridSize, this.height], {
-				stroke: '#ccc',
+			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
+			const verticalEndingOffset = Math.ceil(this.maxWidth / this.gridSize)
+			const vertialStartCoords = [i * this.gridSize, 0];
+			const verticalEndCoords = [i * this.gridSize, this.maxHeight - verticalEndingOffset];
+
+			let vertialLine = new fabric.Line(vertialStartCoords.concat(verticalEndCoords), {
+				stroke: '#fff',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
 			});
 
-			let horizontalLine = new fabric.Line([0, i * this.gridSize, this.width, i * this.gridSize], {
-				stroke: '#ccc',
+			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
+			const horizontalEndingOffset = Math.ceil(this.maxHeight / this.gridSize)
+			const horizontalStartCoords = [0, i * this.gridSize];
+			const horizontalEndCoords = [this.maxWidth - horizontalEndingOffset, i * this.gridSize]
+
+			let horizontalLine = new fabric.Line(horizontalStartCoords.concat(horizontalEndCoords), {
+				stroke: '#fff',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
@@ -105,11 +122,22 @@ export class Canvas {
 
 	#onMoving(event) {
 
-		const snap = {
+		let snap = {
 			// closest width to snap to
 			left: this.#snap(event.target.left),
 			top: this.#snap(event.target.top),
 		};
+
+		// https://stackoverflow.com/questions/42833142/prevent-fabric-js-objects-from-scaling-out-of-the-canvas-boundary
+		const boundingRect = event.target.getBoundingRect(true);
+
+		if (snap.left < 0
+			|| snap.top < 0
+			|| snap.left + boundingRect.width > this.maxWidth
+			|| snap.top + boundingRect.height > this.maxHeight) {
+			snap.left = this.selectionCoords.x;
+			snap.top = this.selectionCoords.y;
+		}
 
 		event.target.set(snap);
 
@@ -165,7 +193,7 @@ export class Canvas {
 			anchorY,
 		);
 
-		const attrs = {
+		let attrs = {
 			scaleX: scaledObject.scaleX,
 			scaleY: scaledObject.scaleY,
 		};
@@ -200,10 +228,40 @@ export class Canvas {
 				break;
 		}
 
+		let updateScale = true;
+
+		if (scaledObject.left < (-this.gridSize / 2) - 1 // this because the object, due to scaling i think, can go slightly over, so this ensures within the snap calculation
+			|| scaledObject.top < (-this.gridSize / 2) - 1
+			|| scaledObject.left + scaledObject.scaleX * this.gridSize > this.maxWidth
+			|| scaledObject.top + scaledObject.scaleY * this.gridSize > this.maxHeight
+		) {
+			attrs.scaleX = this.currentXScale;
+			attrs.scaleY = this.currentYScale;
+
+			// SCALED OBJECT UPDATES THE LOOP BEFORE BOUNDING RECT
+			// THIS MEANS BOUNDING RECT IS BEHIND AND BY THE TIME IT UPDATES
+			// THE BAD VALUES HAVE ALREADY BEEN WRITTEN TO THIS.CURRENTXSCALE ETC
+			console.log("out of bounds");
+
+
+			updateScale = false;
+		}
+
+		console.log(scaledObject)
+
+		console.log(`${scaledObject.left + scaledObject.scaleX * this.gridSize} > ${this.maxWidth} : ${scaledObject.left + scaledObject.scaleX * this.gridSize > this.maxWidth}`)
+
 		if (attrs.scaleX !== scaledObject.scaleX || attrs.scaleY !== scaledObject.scaleY) {
+			console.log(attrs)
 			scaledObject.set(attrs);
 			scaledObject.setPositionByOrigin(anchorPoint, anchorX, anchorY);
 		}
+
+		if (updateScale) {
+			this.currentXScale = attrs.scaleX;
+			this.currentYScale = attrs.scaleY;
+		}
+
 
 		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
 
@@ -221,6 +279,9 @@ export class Canvas {
 		this.#placeTiles(attrs, generatedBuilding, scaledObject);
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
+
+		console.log("----")
+
 	}
 
 	#onZooming(event) {
@@ -232,7 +293,29 @@ export class Canvas {
 		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
 		event.e.preventDefault();
 		event.e.stopPropagation();
-		console.log(zoom);
+
+
+		// http://fabricjs.com/fabric-intro-part-5
+		let vpt = this.fabricCanvas.viewportTransform;
+
+
+
+		// if (zoom < 400 / 1000) {
+		// 	vpt[4] = 200 - 1000 * zoom / 2;
+		// 	vpt[5] = 200 - 1000 * zoom / 2;
+		// } else {
+		// 	if (vpt[4] >= 0) {
+		// 		vpt[4] = 0;
+		// 	} else if (vpt[4] < this.fabricCanvas.getWidth() - 1000 * zoom) {
+		// 		vpt[4] = this.fabricCanvas.getWidth() - 1000 * zoom;
+		// 	}
+		// 	if (vpt[5] >= 0) {
+		// 		vpt[5] = 0;
+		// 	} else if (vpt[5] < this.fabricCanvas.getHeight() - 1000 * zoom) {
+		// 		vpt[5] = this.fabricCanvas.getHeight() - 1000 * zoom;
+		// 	}
+		// }
+
 	}
 
 	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ
