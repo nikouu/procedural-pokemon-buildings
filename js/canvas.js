@@ -20,7 +20,8 @@ export class Canvas {
 		this.fabricCanvas = new fabric.Canvas(canvasId,
 			{
 				preserveObjectStacking: true,
-				selection: false
+				selection: false,
+				backgroundColor: '#abbbc5'
 			}
 		);
 

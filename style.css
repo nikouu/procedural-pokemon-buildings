@@ -1,0 +1,24 @@
+
+.sg-grid .col {
+    position: relative;
+    min-height: 40px;
+    padding: 8px;
+    font-size: 16px;
+    line-height: 32px;
+	background-color: #283A45;
+	margin: 0 8px;
+}
+
+/* .sg-grid .col:after {
+    z-index: -2;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: "";
+    background-color: #283A45;
+    width: calc(100% - 16px);
+    height: 100%;
+    border-radius: 4px;
+    margin: 0 8px
+} */
+

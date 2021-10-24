@@ -2,15 +2,23 @@
 <html>
 
 <head>
-
-</head>
-
-<body>
-    <canvas id="canvas"></canvas>
-
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="flex-grid-lite.css">
     <script src="/js/lib/fabric.js"></script>
     <!-- <script src="script.js"></script> -->
     <script type="module" src="js/app.js"></script>
+</head>
+
+<body>
+    <div class="grid sg-grid" style="background-color: rgb(114, 71, 71);">
+        <div class="col col-fixed" style="background-color: rgb(248, 157, 175); width:700px;">
+            <canvas id="canvas"></canvas>
+        </div>
+    
+        <div class="col col-lg" style="background-color: rgb(175, 248, 157);">
+            other stuff
+        </div>    
+    </div>  
 </body>
 
 </html>
