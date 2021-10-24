@@ -370,4 +370,14 @@ export class Canvas {
 	getHeight() {
 		return this.currentYScale;
 	}
+
+	updateBuildingSettings(x, y, options){
+		//generate new building with settings and draw it
+		// hm watch out for bad input where the user can put it not on a snap edge
+
+		// move the selection
+		// change the size of the selection
+		// use optiosn to generate new building
+		// put building tiles on screen
+	}
 }

@@ -21,6 +21,7 @@ export class BuildingGenerator {
 		depth: Depth.small
 	}
 
+	// properly name options/settings to the right thing across the code
 	#settings = {}
 
 	// perhaps have another object that converts settings into tiles by * 2 everything
@@ -46,9 +47,11 @@ export class BuildingGenerator {
 	// generate a 2d array of tiles based on rules to construct a building
 	// thinking of doing a pass to assign the type of tile to each square then doing a 
 	// second pass to do the details, such as which roof edge to use
-	generate() {
+	generate(options = {}) {
 		// use the enum value to increase the height. since this is a 2D plane, the depth of the building
 		// is just added to the height
+		
+		this.setSettings(options);
 
 		//setup array
 		this.#tileArray = [...Array(this.#settings.width)].map(() => Array(this.#settings.height).fill(0));
