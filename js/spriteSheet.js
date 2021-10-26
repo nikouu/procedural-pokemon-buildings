@@ -7,7 +7,7 @@ export class SpriteSheet {
 		this.spriteHeight = spriteHeight;
 		this.scale = scale;
 
-		this.#init3();
+		//this.#init3();
 	}
 
 	#spriteMap = new Map();
@@ -119,6 +119,9 @@ export class SpriteSheet {
 		return new Promise(resolve => {
 			const image = fabric.util.createImage();
 			image.addEventListener('load', () => {
+				if (image == undefined) {
+					console.log("undefined")
+				}
 				resolve(image);
 			});
 			image.src = url;
@@ -149,7 +152,9 @@ export class SpriteSheet {
 		};
 
 		return Promise.all(promiseArray).then(result => {
-			this.#spriteMap.set(result.tileKey, result.sprite);
+			//this.#spriteMap.set(result.tileKey, result.sprite);
+
+			this.#spriteMap = new Map(result.map(obj => [obj.tileKey, obj.sprite]));
 		}).then(() => {
 			return this.#spriteMap;
 		})

@@ -1,5 +1,7 @@
 import { Canvas } from './canvas.js'
 import { BuildingGenerator } from './buildingGenerator.js'
+import { BuildingState } from './buildingState.js'
+import { UserSettings } from './UserSettings.js';
 
 // https://www.ilearnjavascript.com/plainjs-fadein-fadeout/
 const fadeOut = (el, smooth = true, displayStyle = 'none') => {
@@ -59,16 +61,16 @@ function encodeSettings() {
 
 	const encodedSettings = `${xPosition}${yPosition}${width}${height}${roof}${hasDoor}${hasWindowGap}${cladding}${decoration}`
 
-	document.getElementById("buildingCode").value = encodedSettings;
+	//ocument.getElementById("buildingCode").value = encodedSettings;
 }
 
 function decodeSettings() {
 	const encodedSettings = document.getElementById("buildingCode").value;
 
-	const xPosition =  parseInt(encodedSettings.slice(0, 4));
-	const yPosition =  parseInt(encodedSettings.slice(4, 8));
-	const width =  parseInt(encodedSettings.slice(8, 12));
-	const height =  parseInt(encodedSettings.slice(12, 16));
+	const xPosition = parseInt(encodedSettings.slice(0, 4));
+	const yPosition = parseInt(encodedSettings.slice(4, 8));
+	const width = parseInt(encodedSettings.slice(8, 12));
+	const height = parseInt(encodedSettings.slice(12, 16));
 
 	const roof = encodedSettings.slice(16, 17);
 	const hasDoor = encodedSettings.slice(17, 18);
@@ -99,42 +101,28 @@ function decodeSettings() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-	const canvas = new Canvas();
+	const state = new BuildingState();
+	window.buildingState = state;
+
+	const buildingGenerator = new BuildingGenerator(state.settings);
+	window.buildingGenerator = buildingGenerator;;
+
+	const canvas = new Canvas({ buildingGenerator, state });
 	canvas.loadSprites().then(() => {
 		// weird interaction where the gif will go behind other layers when doing this
 		// solved by individually fading the elements
 		//fadeOut(document.getElementById('loading'));
 		fadeOut(document.getElementsByClassName("overlay")[0])
 		fadeOut(document.getElementsByTagName("img")[0])
-	});
-	window.buildingGenerator = new BuildingGenerator();
-	window.canvas = canvas;
 
-	encodeSettings();
+		window.canvas = canvas;
 
-	const settingsForm = document.getElementById("settings");
-
-	settingsForm.addEventListener("change", (event) => {
-		if (event.target.id === "buildingCode") {
-			return;
-		}
-
-		if (!event.isTrusted) {
-			return;
-		}
-
-		encodeSettings();
+		const userSettings = new UserSettings("settings", state);
+		userSettings.setSettings(state.settings);
 	});
 
-	settingsForm.onsubmit = function(event){
-		event.preventDefault();
-	}
 
-	const buildingCodeInput = document.getElementById("buildingCode");
 
-	buildingCodeInput.addEventListener("change", (event) => {
-		console.log("update settings")
-		decodeSettings();
-	});
-	
+	//encodeSettings();
+
 });

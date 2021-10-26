@@ -6,9 +6,11 @@ export class Canvas {
 
 	// Javascript flavour of named parameters with optional parameters
 	// https://javascript.info/destructuring-assignment#smart-function-parameters
-	constructor({ canvasId = "canvas", width = 600, height = 600 } = {}) {
+	constructor({ canvasId = "canvas", width = 600, height = 600, state, buildingGenerator } = {}) {
 		this.width = width;
 		this.height = height;
+		this.#state = state;
+		this.#buildingGenerator = buildingGenerator;
 		this.gridSize = 48;
 
 		this.maxWidth = 1000;
@@ -36,11 +38,39 @@ export class Canvas {
 		this.fabricCanvas.setHeight(this.height);
 		this.fabricCanvas.requestRenderAll();
 
-		this.buildingGenerator = new BuildingGenerator();
-
 		this.#setupGrid();
 		this.#setupSelectorRectangle();
 		this.#setupEvents();
+
+		this.#state.addSubscriber(this.onStateChange.bind(this));
+	}
+
+	#state;
+
+	#buildingGenerator;
+
+	onStateChange(key, state, oldState){
+		this.#buildingGenerator.setState(this.#state.settings);
+
+		//this.currentXScale = this.#state.settings.width;
+		//this.currentYScale = this.#state.settings.height;
+
+		// const attrs = {
+		// 	scaleX: this.currentXScale,
+		// 	scaleY: this.currentYScale
+		// }
+
+		const attrs = {
+			scaleX: this.#state.settings.width,
+			scaleY: this.#state.settings.height
+		}
+
+		const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
+
+		const generatedBuilding = this.#buildingGenerator.generate();
+
+		this.#placeTiles(attrs, generatedBuilding, selectionRectangle);
+
 	}
 
 	#setupGrid() {
@@ -82,11 +112,16 @@ export class Canvas {
 	}
 
 	#setupSelectorRectangle() {
+		this.currentXScale = this.#state.settings.width 
+		this.currentYScale = this.#state.settings.height
+
 		const selectionRect = new fabric.Rect({
-			left: this.selectionCoords.x,
-			top: this.selectionCoords.y,
+			left: this.#state.settings.x,
+			top: this.#state.settings.y,
 			width: this.gridSize,
 			height: this.gridSize,
+			scaleX: this.#state.settings.width,
+			scaleY: this.#state.settings.height,
 			fill: 'rgba(120,5,5,0.2)',
 			originX: 'left',
 			originY: 'top',
@@ -168,6 +203,8 @@ export class Canvas {
 			target: scaledObject
 		} = transform;
 
+
+
 		// scaledObject.width/height is the original object dimensions, not the new scaled dimensions
 		const calculatedWidth = scaledObject.width * scaledObject.scaleX;
 		const calculatedHeight = scaledObject.height * scaledObject.scaleY;
@@ -242,15 +279,16 @@ export class Canvas {
 		}
 
 		if (attrs.scaleX !== scaledObject.scaleX || attrs.scaleY !== scaledObject.scaleY) {
-			console.log(attrs)
 			scaledObject.set(attrs);
 			scaledObject.setPositionByOrigin(anchorPoint, anchorX, anchorY);
 		}
 
-		if (updateScale) {
+		if (updateScale && Number.isInteger(attrs.scaleX) && Number.isInteger(attrs.scaleY)) {
 			this.currentXScale = attrs.scaleX;
 			this.currentYScale = attrs.scaleY;
 		}
+
+		console.log(`${attrs.scaleX} ${attrs.scaleY}`)
 
 
 		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
@@ -258,17 +296,23 @@ export class Canvas {
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
 
-		let settings = this.buildingGenerator.getSettings();
-		settings.width = attrs.scaleX;
-		settings.height = attrs.scaleY;
-		settings.depth = 4;
-		this.buildingGenerator.setSettings(settings);
+		//this.#buildingGenerator.setState(this.#state.settings);
+		//let generatedBuilding = this.#buildingGenerator.generate();
 
-		let generatedBuilding = this.buildingGenerator.generate();
-
-		this.#placeTiles(attrs, generatedBuilding, scaledObject);
+		//this.#placeTiles(attrs, generatedBuilding, scaledObject);
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
+
+		this.#state.settings["x"] = this.#snap(scaledObject.left);
+		this.#state.settings["y"] = this.#snap(scaledObject.top);
+		this.#state.settings["width"] = this.currentXScale;
+		this.#state.settings["height"] = this.currentYScale;
+
+		// const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
+	
+		// 	const generatedBuilding = this.#buildingGenerator.generate();
+	
+		// 	this.#placeTiles(attrs, generatedBuilding, selectionRectangle);
 
 	}
 
@@ -316,6 +360,12 @@ export class Canvas {
 	}
 
 	#placeTiles(attrs, generatedBuilding, scaledObject) {
+
+		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
+
+		// clear existing tiles
+		this.fabricCanvas.remove(...objectsToRemove);
+
 		// this draws top to bottom, left to right
 		for (let currentX = 0; currentX < attrs.scaleX; currentX++) {
 			for (let currentY = 0; currentY < attrs.scaleY; currentY++) {
@@ -329,7 +379,15 @@ export class Canvas {
 				}
 				else {
 					const randomSpriteReference = keys[Math.floor(Math.random() * keys.length)];
-					spriteHandle = new fabric.Image(this.spriteMap.get(randomSpriteReference));
+					spriteHandle = new fabric.Rect({
+						width: this.gridSize * 1,
+						height: this.gridSize * 1,
+						fill: '#000',
+						name: 'buildingTile',
+						selectable: false,
+						originX: 'left',
+						originY: 'top'
+					});
 				}
 
 				spriteHandle["name"] = 'buildingTile';
@@ -352,6 +410,23 @@ export class Canvas {
 		let spriteSheet = new SpriteSheet("/spritesheets/original-spritesheet-6x.png", 48, 48, 6);
 		await spriteSheet.getSpriteMap().then(result => {
 			this.spriteMap = result;
+
+			
+
+		}).then(() => {
+			const attrs = {
+				scaleX: this.#state.settings.width,
+				scaleY: this.#state.settings.height
+			}
+
+			this.currentXScale = attrs.scaleX;
+			this.currentYScale = attrs.scaleY;
+	
+			const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
+	
+			const generatedBuilding = this.#buildingGenerator.generate();
+	
+			this.#placeTiles(attrs, generatedBuilding, selectionRectangle);
 		});
 	}
 
@@ -369,15 +444,5 @@ export class Canvas {
 
 	getHeight() {
 		return this.currentYScale;
-	}
-
-	updateBuildingSettings(x, y, options){
-		//generate new building with settings and draw it
-		// hm watch out for bad input where the user can put it not on a snap edge
-
-		// move the selection
-		// change the size of the selection
-		// use optiosn to generate new building
-		// put building tiles on screen
 	}
 }
