@@ -12,7 +12,7 @@ export class BuildingState {
 		this.settings = new Proxy(this.#settings, {
 			set(state, key, value, receiver) {
 				const oldState = {...state};
-				const newValue = value === 'true' || (value === 'false' ? false : value);	//cleans up truthys		
+				const newValue = value === 'true' || (value === 'false' ? false : value);	//cleans up truthy true/false		
 	
 				state[key] = newValue;
 	
