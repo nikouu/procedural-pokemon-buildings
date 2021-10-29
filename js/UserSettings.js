@@ -1,11 +1,11 @@
 export class UserSettings {
 	constructor(id, state) {
+		window.app.userSettings = this;
 		this.#element = document.getElementById(id);
 		this.#state = state;
 		this.#setupEvents();
 		
 		this.#state.addSubscriber(this.onStateChange.bind(this));
-
 	}
 
 	#state;
@@ -18,8 +18,8 @@ export class UserSettings {
 
 			if (!event.isTrusted) {
 				return;
-			}
-		
+			}		
+
 			this.#state.settings[event.target.name] = event.target.value;
 
 		});
@@ -42,16 +42,7 @@ export class UserSettings {
 	}
 
 	onStateChange(key, state){
-		//this.#element.key = state;
 		this.setSettings();
-	}
-
-	getSettings() {
-
-	}
-
-	#getEncodedSettings() {
-
 	}
 
 	#setEncodedSettings(buildingState) {

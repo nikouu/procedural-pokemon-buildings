@@ -5,6 +5,7 @@ import { Roof } from './enums/Roof.js'
 
 export class BuildingState {
 	constructor(settings = {}) {
+		window.app.buildingState = this;
 		let self = this; //ew
 		
 		this.#settings = Object.assign(this.#default, settings);

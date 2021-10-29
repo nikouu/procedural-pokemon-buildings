@@ -7,6 +7,7 @@ export class Canvas {
 	// Javascript flavour of named parameters with optional parameters
 	// https://javascript.info/destructuring-assignment#smart-function-parameters
 	constructor({ canvasId = "canvas", width = 600, height = 600, state, buildingGenerator } = {}) {
+		window.app.canvas = this;
 		this.width = width;
 		this.height = height;
 		this.#state = state;

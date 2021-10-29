@@ -3,6 +3,8 @@ import { BuildingGenerator } from './buildingGenerator.js'
 import { BuildingState } from './buildingState.js'
 import { UserSettings } from './UserSettings.js';
 
+window.app = {};
+
 // https://www.ilearnjavascript.com/plainjs-fadein-fadeout/
 const fadeOut = (el, smooth = true, displayStyle = 'none') => {
 	if (smooth) {
@@ -30,19 +32,6 @@ const fadeOut = (el, smooth = true, displayStyle = 'none') => {
 };
 
 window.fadeOut = fadeOut;
-
-/*
-	Format as a concatenation of:
-	x position padded to 4 digits
-	y position 
-	width 
-	height 
-	roof 1 or 0
-	door 1 or 0
-	window gap 1 or 0
-	cladding as 1 or 0
-	decoration as 0-4
-*/
 
 // perhaps use this to shorten https://stackoverflow.com/a/25963279
 function encodeSettings() {
@@ -102,10 +91,8 @@ function decodeSettings() {
 
 document.addEventListener("DOMContentLoaded", () => {
 	const state = new BuildingState();
-	window.buildingState = state;
 
 	const buildingGenerator = new BuildingGenerator(state.settings);
-	window.buildingGenerator = buildingGenerator;;
 
 	const canvas = new Canvas({ buildingGenerator, state });
 	canvas.loadSprites().then(() => {
@@ -114,8 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		//fadeOut(document.getElementById('loading'));
 		fadeOut(document.getElementsByClassName("overlay")[0])
 		fadeOut(document.getElementsByTagName("img")[0])
-
-		window.canvas = canvas;
 
 		const userSettings = new UserSettings("settings", state);
 		userSettings.setSettings(state.settings);

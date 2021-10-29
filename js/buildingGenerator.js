@@ -7,6 +7,7 @@ export class BuildingGenerator {
 
 	constructor(state) {
 		this.#state = state;
+		window.app.buildingGenerator = this;
 	}
 
 	// could create a proxy that prints the array everytime something is being written to it, to be like a graphic 

@@ -2,6 +2,7 @@ import { OriginalTiles } from './tiles/OriginalTiles.js'
 
 export class SpriteSheet {
 	constructor(spriteSheetUrl, spriteWidth, spriteHeight, scale = 1) {
+		window.app.spriteSheet = this;
 		this.spriteSheetUrl = spriteSheetUrl;
 		this.spriteWidth = spriteWidth;
 		this.spriteHeight = spriteHeight;
