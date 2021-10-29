@@ -32,8 +32,8 @@ export class BuildingState {
 	// it takes two tiles to create one floor. 
 	// might need a seed too?
 	#default = {
-		x: 50,
-		y: 50,
+		x: 48,
+		y: 48,
 		height: 8, // tiles
 		width: 8, // tiles
 		hasDoor: true,

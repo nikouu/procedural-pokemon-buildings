@@ -193,6 +193,11 @@ export class Canvas {
 			// updates new selection position value for deltas
 			this.selectionCoords = new fabric.Point(snap.left, snap.top);
 		}
+
+		console.log(this.selectionCoords)
+
+		this.#state.settings.x = snap.left;
+		this.#state.settings.y = snap.top;
 	}
 
 	#onScaling(event) {
@@ -303,10 +308,10 @@ export class Canvas {
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
 
-		this.#state.settings["x"] = this.#snap(scaledObject.left);
-		this.#state.settings["y"] = this.#snap(scaledObject.top);
-		this.#state.settings["width"] = this.currentXScale;
-		this.#state.settings["height"] = this.currentYScale;
+		this.#state.settings.x= this.#snap(scaledObject.left);
+		this.#state.settings.y = this.#snap(scaledObject.top);
+		this.#state.settings.width = this.currentXScale;
+		this.#state.settings.height = this.currentYScale;
 
 		// const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
 	

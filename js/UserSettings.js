@@ -31,18 +31,19 @@ export class UserSettings {
 
 	#element;
 
-	setSettings(buildingState) {
-		this.#element.roof.value = buildingState.roof;
-		this.#element.hasDoor.value = buildingState.hasDoor;
-		this.#element.hasWindowGap.value = buildingState.hasWindowGap;
-		this.#element.cladding.value = buildingState.cladding;
-		this.#element.decoration.value = buildingState.decoration;
+	setSettings() {
+		this.#element.roof.value = this.#state.settings.roof;
+		this.#element.hasDoor.value = this.#state.settings.hasDoor;
+		this.#element.hasWindowGap.value = this.#state.settings.hasWindowGap;
+		this.#element.cladding.value = this.#state.settings.cladding;
+		this.#element.decoration.value = this.#state.settings.decoration;
 
-		this.#setEncodedSettings(buildingState);
+		this.#setEncodedSettings();
 	}
 
 	onStateChange(key, state){
-		this.#element.key = state;
+		//this.#element.key = state;
+		this.setSettings();
 	}
 
 	getSettings() {
@@ -54,6 +55,6 @@ export class UserSettings {
 	}
 
 	#setEncodedSettings(buildingState) {
-		document.getElementById("buildingCode").value = JSON.stringify(buildingState);
+		document.getElementById("buildingCode").value = JSON.stringify(this.#state.settings);
 	}
 }
