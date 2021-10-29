@@ -195,8 +195,6 @@ export class Canvas {
 			this.selectionCoords = new fabric.Point(snap.left, snap.top);
 		}
 
-		console.log(this.selectionCoords)
-
 		this.#state.settings.x = snap.left;
 		this.#state.settings.y = snap.top;
 	}
@@ -293,9 +291,6 @@ export class Canvas {
 			this.currentXScale = attrs.scaleX;
 			this.currentYScale = attrs.scaleY;
 		}
-
-		console.log(`${attrs.scaleX} ${attrs.scaleY}`)
-
 
 		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
 
