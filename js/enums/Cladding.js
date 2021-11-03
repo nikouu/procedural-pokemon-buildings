@@ -1,4 +1,4 @@
 export const Cladding = {
-	wood: 'wood',
-	brick: 'brick'
+	wood: '0',
+	brick: '1'
 }

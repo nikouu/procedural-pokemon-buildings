@@ -15,7 +15,7 @@ export class Canvas {
 		this.gridSize = 48;
 
 		this.maxWidth = 1000;
-		this.maxHeight = 500;
+		this.maxHeight = 1000;
 
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);

@@ -1,14 +1,16 @@
 export class UserSettings {
-	constructor(id, state) {
+	constructor(id, state, stringEncoder) {
 		window.app.userSettings = this;
 		this.#element = document.getElementById(id);
 		this.#state = state;
+		this.#stringEncoder = stringEncoder;
 		this.#setupEvents();
 		
 		this.#state.addSubscriber(this.onStateChange.bind(this));
 	}
-
+	#element;
 	#state;
+	#stringEncoder;
 
 	#setupEvents() {
 		this.#element.addEventListener("change", (event) => {
@@ -29,7 +31,7 @@ export class UserSettings {
 		}
 	}
 
-	#element;
+
 
 	setSettings() {
 		this.#element.roof.value = this.#state.settings.roof;
@@ -45,7 +47,10 @@ export class UserSettings {
 		this.setSettings();
 	}
 
-	#setEncodedSettings(buildingState) {
-		document.getElementById("buildingCode").value = JSON.stringify(this.#state.settings);
+	#setEncodedSettings() {
+
+		const encodedSettings = this.#stringEncoder.encodeFun(this.#state.settings);	
+	
+		document.getElementById("buildingCode").value = encodedSettings;
 	}
 }
