@@ -2,7 +2,7 @@ import { Canvas } from './canvas.js'
 import { BuildingGenerator } from './buildingGenerator.js'
 import { BuildingState } from './buildingState.js'
 import { UserSettings } from './UserSettings.js';
-import { StringEncoder } from './stringEncoder.js';
+import { SettingsEncoder } from './settingsEncoder.js';
 
 window.app = {};
 
@@ -39,18 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const buildingGenerator = new BuildingGenerator(state.settings);
 
-	
-
 	const canvas = new Canvas({ buildingGenerator, state });
 	canvas.loadSprites().then(() => {
-		// weird interaction where the gif will go behind other layers when doing this
+		// weird interaction where the loading gif will go behind other layers when doing this
 		// solved by individually fading the elements
-		//fadeOut(document.getElementById('loading'));
 		fadeOut(document.getElementsByClassName("overlay")[0])
 		fadeOut(document.getElementsByTagName("img")[0])
 
-		const stringEncoder = new StringEncoder();
-		const userSettings = new UserSettings("settings", state, stringEncoder);
+		const settingsEncoder = new SettingsEncoder();
+		const userSettings = new UserSettings("settings", state, settingsEncoder);
 		userSettings.setSettingsUI(state.settings);
 	});
 });

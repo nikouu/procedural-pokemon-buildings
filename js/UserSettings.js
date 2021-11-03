@@ -1,23 +1,23 @@
 export class UserSettings {
-	constructor(id, state, stringEncoder) {
+	constructor(id, state, settingsEncoder) {
 		window.app.userSettings = this;
 		this.#element = document.getElementById(id);
 		this.#state = state;
-		this.#stringEncoder = stringEncoder;
+		this.#settingsEncoder = settingsEncoder;
 		this.#setupEvents();
 		
 		this.#state.addSubscriber(this.onStateChange.bind(this));
 	}
 	#element;
 	#state;
-	#stringEncoder;
+	#settingsEncoder;
 
 	#setupEvents() {
 		this.#element.addEventListener("change", (event) => {
 			if (!event.isTrusted) {
 				return;
 			}
-			
+
 			this.#state.settings[event.target.name] = event.target.value;
 		});
 
@@ -25,9 +25,9 @@ export class UserSettings {
 			this.onEncodedSettingsChange(event.target.value);		
 		});
 
-		this.#element.onsubmit = function (event) {
-			event.preventDefault();
-		}
+		this.#element.addEventListener('submit', (event) => {		
+			event.preventDefault();	
+		});	
 	}
 
 	onStateChange(key, state){
@@ -45,7 +45,7 @@ export class UserSettings {
 	}
 
 	#setEncodedSettingsString() {
-		const encodedSettings = this.#stringEncoder.encodeFun(this.#state.settings);	
+		const encodedSettings = this.#settingsEncoder.encode(this.#state.settings);	
 		document.getElementById("buildingCode").value = encodedSettings;
 	}
 
@@ -54,7 +54,7 @@ export class UserSettings {
 		if ([...encodedSettings].length != 5){
 			return;
 		}
-		const newState = this.#stringEncoder.decodeFun(encodedSettings);
+		const newState = this.#settingsEncoder.decode(encodedSettings);
 		Object.keys(newState).forEach(key => this.#state.settings[key] = newState[key]);
 	}
 }
