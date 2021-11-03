@@ -11,6 +11,8 @@ export class StringEncoder {
 		window.app.stringEncoder = this;
 	}
 
+	#offset = 9728;
+
 	encodeBoring(string) {
 		string = unescape(encodeURIComponent(string));
 		var newString = '',
@@ -67,34 +69,47 @@ export class StringEncoder {
 		return newString;
 	}
 
-	encodeFun(state){
-		const statePropertiesString = this.#convertStateToString(state)
-		const binaryString = this.#convertStringToBinary(statePropertiesString);
-		const encodedString = this.#convertBinaryToUTF16(binaryString);
-		return encodedString;
+	encodeFun(state) {
+		const encodedXY = `${String.fromCharCode(state.x + this.#offset)}${String.fromCharCode(state.y + this.#offset)}`
+		const encodedSize = `${String.fromCharCode(state.width + this.#offset)}${String.fromCharCode(state.height + this.#offset)}`
+		const stringSettings = `${+state.hasDoor}${+state.hasWindowGap}${state.cladding}${state.decoration}${state.depth}`
+		const encodedSettings = String.fromCharCode(+stringSettings+ this.#offset);
+
+		const encodedState = `${encodedXY}${encodedSize}${encodedSettings}`;
+
+		return encodedState;
 	}
 
-	decodeFun(string){
+	decodeFun(string) {
+		const x = string.charCodeAt(0) - this.#offset;
+		const y = string.charCodeAt(1) - this.#offset;
 
+		const width = string.charCodeAt(2) - this.#offset;
+		const height = string.charCodeAt(3) - this.#offset;
+
+		const decodedSettings = (string.charCodeAt(4) - this.#offset).toString();
+
+		const hasDoor = !!decodedSettings[0];
+		const hasWindowGap = !!decodedSettings[1];
+		const cladding = decodedSettings[2];
+		const decoration = decodedSettings[3];
+		const depth = +decodedSettings[4];
+
+		return {
+			x,
+			y, 
+			width,
+			height,
+			hasDoor,
+			hasWindowGap,
+			cladding,
+			decoration,
+			depth
+		}
 	}
 
 	#convertStateToString(state) {
-		const statePropertiesString = Object.values(state).map(x => +x).join(",");
 
-		const sortedStateKeyArray = Object.keys(app.buildingState.settings).sort();
-
-		const binaryXY = this.#convertStringToBinary(`${state.x}${state.y}`);
-		const binarySize = this.#convertStringToBinary(`${state.width}${state.height}`);
-
-		const encodedXY = this.#convertBinaryToUTF16(binaryXY);
-		const encodedSize = this.#convertBinaryToUTF16(binarySize);
-
-		const stringSettings = `${+state.hasDoor}${+state.hasWindowGap}${state.cladding}${state.decoration}${state.depth}`
-		
-		const encodedSettings = String.fromCharCode(+stringSettings);
-
-		return `${encodedXY}${encodedSize}${encodedSettings}`;
-		return statePropertiesString;
 	}
 
 
@@ -116,13 +131,13 @@ export class StringEncoder {
 
 	#convertBinaryToUTF16(binaryString) {
 		let returnString = '';
-		
+
 		for (var i = 0; i < binaryString.length; i += 16) {
-			var slicedString = binaryString.slice(i, i+16);
+			var slicedString = binaryString.slice(i, i + 16);
 			returnString += String.fromCharCode(parseInt(slicedString, 2));
 		}
 
 		return returnString;
 	}
-	
+
 }

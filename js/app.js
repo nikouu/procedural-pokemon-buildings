@@ -51,6 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		const stringEncoder = new StringEncoder();
 		const userSettings = new UserSettings("settings", state, stringEncoder);
-		userSettings.setSettings(state.settings);
+		userSettings.setSettingsUI(state.settings);
 	});
 });
