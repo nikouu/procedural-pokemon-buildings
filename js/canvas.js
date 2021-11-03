@@ -14,8 +14,11 @@ export class Canvas {
 		this.#buildingGenerator = buildingGenerator;
 		this.gridSize = 48;
 
-		this.maxWidth = 1000;
-		this.maxHeight = 1000;
+		this.maxWidthInCells = 30; // in grid cell size, not pixels
+		this.maxHeightInCells = 30; // in grid cell size, not pixels
+
+		this.maxHeight = this.maxHeightInCells * this.gridSize;
+		this.maxWidth = this.maxWidthInCells * this.gridSize;
 
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
@@ -75,30 +78,30 @@ export class Canvas {
 	}
 
 	#setupGrid() {
-		for (let i = 0; i < this.maxWidth / this.gridSize; i++) {
+		for (let i = 0; i < this.maxWidthInCells; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
 			// the -1 is such that the bottom right corner is covered
-			const verticalEndingOffset = this.maxHeight % this.gridSize - 1;
-			const vertialStartCoords = [i * this.gridSize, 0];
-			const verticalEndCoords = [i * this.gridSize, this.maxHeight - verticalEndingOffset];
 
-			let vertialLine = new fabric.Line(vertialStartCoords.concat(verticalEndCoords), {
+			const verticalStartCoords = [i * this.gridSize, 0];
+			const verticalEndCoords = [i * this.gridSize, this.maxHeightInCells * this.gridSize - this.gridSize];
+
+			let verticalLine = new fabric.Line(verticalStartCoords.concat(verticalEndCoords), {
 				stroke: '#fff',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
 			});
 
-			this.fabricCanvas.add(vertialLine)
-			this.fabricCanvas.moveTo(vertialLine, 0);
+			this.fabricCanvas.add(verticalLine)
+			this.fabricCanvas.moveTo(verticalLine, 0);
 		}
 
-		for (let i = 0; i < this.maxHeight / this.gridSize; i++) {
+		for (let i = 0; i < this.maxHeightInCells; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
 			// the -1 is such that the bottom right corner is covered
-			const horizontalEndingOffset = this.maxWidth % this.gridSize - 1;
+
 			const horizontalStartCoords = [0, i * this.gridSize];
-			const horizontalEndCoords = [this.maxWidth - horizontalEndingOffset, i * this.gridSize]
+			const horizontalEndCoords = [this.maxWidthInCells * this.gridSize - this.gridSize , i * this.gridSize]
 
 			let horizontalLine = new fabric.Line(horizontalStartCoords.concat(horizontalEndCoords), {
 				stroke: '#fff',
@@ -206,8 +209,6 @@ export class Canvas {
 		const {
 			target: scaledObject
 		} = transform;
-
-
 
 		// scaledObject.width/height is the original object dimensions, not the new scaled dimensions
 		const calculatedWidth = scaledObject.width * scaledObject.scaleX;
@@ -379,7 +380,6 @@ export class Canvas {
 					spriteHandle = new fabric.Image(spriteReference);
 				}
 				else {
-					const randomSpriteReference = keys[Math.floor(Math.random() * keys.length)];
 					spriteHandle = new fabric.Rect({
 						width: this.gridSize * 1,
 						height: this.gridSize * 1,
@@ -399,7 +399,7 @@ export class Canvas {
 				spriteHandle["top"] = scaledObject.top + (this.gridSize * currentY);
 
 				this.fabricCanvas.add(spriteHandle);
-				this.fabricCanvas.moveTo(spriteHandle, 100);
+				this.fabricCanvas.bringToFront(spriteHandle);
 			}
 		}
 		// hacky workaround to get the selection bit back on top, probably needs fixing
