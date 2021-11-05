@@ -219,7 +219,11 @@ export class BuildingGenerator {
 
 	// need to work out better window settings
 	#setWindows() {
-		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
+		let bottomOfRoof = this.#calculateDepth(this.#state.roof);
+
+		if (this.#state.roof === Roof.type4){
+			bottomOfRoof++;
+		}
 
 		if (this.#state.windows === Windows.noWindows){
 			return;
@@ -230,6 +234,7 @@ export class BuildingGenerator {
 		} else if (this.#state.windows === Windows.filledRows){
 			for (let x = 1; x < this.#state.width - 1; x++) {
 				for(let y = bottomOfRoof; y < this.#state.height - 2; y+=2){
+					
 					this.#writeToArrayIfPossible(x, y, "RegularWindow");
 				}				
 			}

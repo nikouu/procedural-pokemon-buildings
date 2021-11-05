@@ -23,7 +23,6 @@ export class UserSettings {
 			} else {
 				this.#state.settings[event.target.name] = event.target.value;
 			}
-
 		});
 
 		this.#element.buildingCode.addEventListener('input', (event) => {
