@@ -2,6 +2,7 @@ import { Cladding } from './enums/Cladding.js'
 import { Decoration } from './enums/Decoration.js'
 import { Roof } from './enums/Roof.js'
 import { Windows } from './enums/Windows.js'
+import { BottomRowWindows } from './enums/BottomRowWindows.js'
 
 export class BuildingState {
 	constructor(settings = {}) {
@@ -44,7 +45,7 @@ export class BuildingState {
 		decoration: Decoration.pokemonCenter,
 		roof: Roof.type2,
 		windows: Windows.singleTopRow,
-		hasBottomRowWindows: false
+		bottomRowWindows: BottomRowWindows.none
 	}
 
 	// properly name options/settings to the right thing across the code

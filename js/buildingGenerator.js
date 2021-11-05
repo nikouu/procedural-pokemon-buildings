@@ -2,6 +2,7 @@ import { Cladding } from './enums/Cladding.js'
 import { Decoration } from './enums/Decoration.js'
 import { Roof } from './enums/Roof.js'
 import { Windows } from './enums/Windows.js'
+import { BottomRowWindows } from './enums/BottomRowWindows.js'
 
 export class BuildingGenerator {
 
@@ -41,7 +42,7 @@ export class BuildingGenerator {
 		this.#setDoor();
 		this.#setExterior();
 		this.#setWindows();
-		
+
 
 		this.#setDecoration();
 
@@ -240,14 +241,21 @@ export class BuildingGenerator {
 					this.#writeToArrayIfPossible(x, y, "RegularWindow");
 				}
 			}
-		}	
+		}
 	}
 
 	#setBottowRowWindows() {
-		if (this.#state.hasBottomRowWindows) {
+		if (this.#state.bottomRowWindows === BottomRowWindows.none) {
+			return;
+		} else if (this.#state.bottomRowWindows === BottomRowWindows.row) {
 			for (let x = 1; x < this.#state.width - 1; x++) {
 				this.#writeToArrayIfPossible(x, this.#state.height - 2, "RegularWindow");
 			}
+		} else if (this.#state.bottomRowWindows === BottomRowWindows.door && this.#state.hasDoor) {
+			// todo: tidy this up
+			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
+			this.#writeToArrayIfPossible(topRightDoorX+1, this.#state.height - 2, "RegularWindow");
+			this.#writeToArrayIfPossible(topRightDoorX+2, this.#state.height - 2, "RegularWindow");
 		}
 	}
 
@@ -365,7 +373,7 @@ export class BuildingGenerator {
 	#calculateDepth(roofType) {
 		switch (roofType) {
 			case Roof.type1:
-				return 2
+				return 1
 			case Roof.type2:
 				return 4;
 			case Roof.type3:
