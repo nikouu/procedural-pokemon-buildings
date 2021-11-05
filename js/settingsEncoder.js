@@ -9,7 +9,7 @@ export class SettingsEncoder {
 		const encodedXY = `${String.fromCharCode(state.x + this.#offset)}${String.fromCharCode(state.y + this.#offset)}`
 		const encodedSize = `${String.fromCharCode(state.width + this.#offset)}${String.fromCharCode(state.height + this.#offset)}`
 
-		const windowSettings = `${+state.windows}${+state.hasWindowGap}`;
+		const windowSettings = `${+state.windows}${+state.hasWindowGap}${+state.hasBottomRowWindows}`;
 		const encodedWindowSettings = String.fromCharCode(+windowSettings+ this.#offset); 
 
 		const otherSettings = `${+state.hasDoor}${+state.cladding}${+state.decoration}${+state.roof}`
@@ -31,6 +31,7 @@ export class SettingsEncoder {
 
 		const windows = +decodedWindowSettings[0];
 		const hasWindowGap = +decodedWindowSettings[1];
+		const hasBottomRowWindows = +decodedWindowSettings[3];
 
 		const decodedOtherSettings = (string.charCodeAt(5) - this.#offset).toString();
 
@@ -49,7 +50,8 @@ export class SettingsEncoder {
 			cladding,
 			decoration,
 			roof,
-			windows
+			windows,
+			hasBottomRowWindows
 		}
 	}	
 }

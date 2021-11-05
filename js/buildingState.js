@@ -43,7 +43,8 @@ export class BuildingState {
 		cladding: Cladding.brick,
 		decoration: Decoration.pokemonCenter,
 		roof: Roof.type2,
-		windows: Windows.singleTopRow
+		windows: Windows.singleTopRow,
+		hasBottomRowWindows: false
 	}
 
 	// properly name options/settings to the right thing across the code
