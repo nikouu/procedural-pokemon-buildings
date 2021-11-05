@@ -1,5 +1,6 @@
 export const Roof = {
-	horizontal: 0,
-	hatch: 1,
-	large: 2
+	type1: 0,
+	type2: 1,
+	type3: 2,
+	type4: 3
 }

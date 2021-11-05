@@ -1,6 +1,5 @@
 import { Cladding } from './enums/Cladding.js'
 import { Decoration } from './enums/Decoration.js'
-import { Depth } from './enums/Depth.js'
 import { Roof } from './enums/Roof.js'
 
 export class BuildingState {
@@ -19,6 +18,7 @@ export class BuildingState {
 	
 				// notify subscrubers
 				self.#subscribers.forEach(callback => callback(key, state, oldState));
+				console.log(state)
 				return state;
 			}
 		})
@@ -41,7 +41,7 @@ export class BuildingState {
 		hasWindowGap: true,
 		cladding: Cladding.brick,
 		decoration: Decoration.pokemonCenter,
-		depth: Depth.medium
+		roof: Roof.type2
 	}
 
 	// properly name options/settings to the right thing across the code

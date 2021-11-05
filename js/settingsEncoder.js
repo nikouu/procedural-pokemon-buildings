@@ -8,7 +8,7 @@ export class SettingsEncoder {
 	encode(state) {
 		const encodedXY = `${String.fromCharCode(state.x + this.#offset)}${String.fromCharCode(state.y + this.#offset)}`
 		const encodedSize = `${String.fromCharCode(state.width + this.#offset)}${String.fromCharCode(state.height + this.#offset)}`
-		const stringSettings = `${+state.hasDoor}${+state.hasWindowGap}${state.cladding}${state.decoration}${state.depth}`
+		const stringSettings = `${+state.hasDoor}${+state.hasWindowGap}${state.cladding}${state.decoration}${state.roof}`
 		const encodedSettings = String.fromCharCode(+stringSettings+ this.#offset);
 
 		const encodedState = `${encodedXY}${encodedSize}${encodedSettings}`;
@@ -29,7 +29,7 @@ export class SettingsEncoder {
 		const hasWindowGap = !!decodedSettings[1];
 		const cladding = decodedSettings[2];
 		const decoration = decodedSettings[3];
-		const depth = +decodedSettings[4];
+		const roof = +decodedSettings[4];
 
 		return {
 			x,
@@ -40,7 +40,7 @@ export class SettingsEncoder {
 			hasWindowGap,
 			cladding,
 			decoration,
-			depth
+			roof
 		}
 	}	
 }

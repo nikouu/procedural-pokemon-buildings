@@ -1,6 +1,5 @@
 import { Cladding } from './enums/Cladding.js'
 import { Decoration } from './enums/Decoration.js'
-import { Depth } from './enums/Depth.js'
 import { Roof } from './enums/Roof.js'
 
 export class BuildingGenerator {
@@ -33,9 +32,6 @@ export class BuildingGenerator {
 	// thinking of doing a pass to assign the type of tile to each square then doing a 
 	// second pass to do the details, such as which roof edge to use
 	generate() {
-		// use the enum value to increase the height. since this is a 2D plane, the depth of the building
-		// is just added to the height	
-
 		//setup array
 		this.#tileArray = [...Array(this.#state.width)].map(() => Array(this.#state.height).fill(0));
 
@@ -69,7 +65,7 @@ export class BuildingGenerator {
 	}
 
 	#setRoof() {
-		if (this.#state.depth === Depth.small) {
+		if (this.#state.roof === Roof.type1) {
 
 			this.#writeToArrayIfPossible(0, 0, "SlantedRoof00");
 			this.#writeToArrayIfPossible(1, 0, "SlantedRoof01");
@@ -91,7 +87,7 @@ export class BuildingGenerator {
 				this.#writeToArrayIfPossible(i, 0, "HorizontalRoof01");
 				this.#writeToArrayIfPossible(i, 1, "HorizontalRoof02");
 			}
-		} else if (this.#state.depth === Depth.medium) {
+		} else if (this.#state.roof === Roof.type2) {
 			this.#writeToArrayIfPossible(0, 0, "HatchedRoof02");
 			this.#writeToArrayIfPossible(0, 1, "HatchedRoof05");
 			this.#writeToArrayIfPossible(0, 2, "HatchedRoof05");
@@ -118,7 +114,7 @@ export class BuildingGenerator {
 		this.#writeToArrayIfPossible(0, this.#state.height - 1, "OuterBuilding00");
 		this.#writeToArrayIfPossible(this.#state.width - 1, this.#state.height - 1, "OuterBuilding02");
 
-		const bottomOfRoof = this.#state.depth;
+		const bottomOfRoof = this.#calculateDepth(this.#state.roof);		
 
 		for (let i = bottomOfRoof; i < this.#state.height - 1; i++) {
 			this.#writeToArrayIfPossible(0, i, "OuterBuilding03");
@@ -131,11 +127,13 @@ export class BuildingGenerator {
 	}
 
 	#setCladding() {
+		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
+
 		for (let x = 1; x < this.#state.width - 1; x++) {
-			for (let y = this.#state.depth; y < this.#state.height - 1; y++) {
-				if (this.#state.cladding == Cladding.wood) {
+			for (let y = bottomOfRoof; y < this.#state.height - 1; y++) {
+				if (this.#state.cladding === Cladding.wood) {
 					this.#writeToArrayIfPossible(x, y, "WoodCladding");
-				} else if (this.#state.cladding == Cladding.brick) {
+				} else if (this.#state.cladding === Cladding.brick) {
 					this.#writeToArrayIfPossible(x, y, "BrickCladding");
 				}
 
@@ -145,12 +143,16 @@ export class BuildingGenerator {
 
 	// need to work out better window settings
 	#setWindows() {
+		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
+
 		for (let x = 1; x < this.#state.width - 1; x++) {
-			this.#writeToArrayIfPossible(x, this.#state.depth, "RegularWindow");
+			this.#writeToArrayIfPossible(x, bottomOfRoof, "RegularWindow");
 		}
 	}
 
 	#setDoor() {
+		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
+
 		// if no door, don't set door
 		if (!this.#state.hasDoor) {
 			return;
@@ -162,7 +164,7 @@ export class BuildingGenerator {
 		}
 
 		// not tall enough for a door
-		if (this.#state.height <= this.#state.depth + 2) {
+		if (this.#state.height <= bottomOfRoof + 2) {
 			return;
 		}
 
@@ -182,6 +184,8 @@ export class BuildingGenerator {
 	// work out later how to maybe make them not aware of each other?
 	// tidy up branching
 	#setDecoration() {
+		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
+		
 		if (!this.#state.decoration === Decoration.none) {
 			return;
 		}
@@ -192,7 +196,7 @@ export class BuildingGenerator {
 		}
 
 		// too small (height)
-		if ((this.#state.height - this.#state.depth) < 4) {
+		if ((this.#state.height - bottomOfRoof) < 4) {
 			return;
 		}
 
@@ -221,4 +225,15 @@ export class BuildingGenerator {
 		}
 	}
 
+	#calculateDepth(roofType) {
+		switch(roofType) {
+			case Roof.type1:
+				return 2
+			case Roof.type2:
+			case Roof.type3:
+				return 4;
+			case Roof.type4:
+				return 8;
+		}
+	}
 }

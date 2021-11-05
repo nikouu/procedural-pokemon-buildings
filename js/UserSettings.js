@@ -5,7 +5,7 @@ export class UserSettings {
 		this.#state = state;
 		this.#settingsEncoder = settingsEncoder;
 		this.#setupEvents();
-		
+
 		this.#state.addSubscriber(this.onStateChange.bind(this));
 	}
 	#element;
@@ -18,19 +18,24 @@ export class UserSettings {
 				return;
 			}
 
-			this.#state.settings[event.target.name] = event.target.value;
+			if (event.target.name === "cladding" || event.target.name === "decoration" || event.target.name === "roof") {
+				this.#state.settings[event.target.name] = +event.target.value;
+			} else {
+				this.#state.settings[event.target.name] = event.target.value;
+			}
+
 		});
 
-		this.#element.buildingCode.addEventListener('input', (event) => {		
-			this.onEncodedSettingsChange(event.target.value);		
+		this.#element.buildingCode.addEventListener('input', (event) => {
+			this.onEncodedSettingsChange(event.target.value);
 		});
 
-		this.#element.addEventListener('submit', (event) => {		
-			event.preventDefault();	
-		});	
+		this.#element.addEventListener('submit', (event) => {
+			event.preventDefault();
+		});
 	}
 
-	onStateChange(key, state){
+	onStateChange(key, state) {
 		this.setSettingsUI();
 	}
 
@@ -45,13 +50,13 @@ export class UserSettings {
 	}
 
 	#setEncodedSettingsString() {
-		const encodedSettings = this.#settingsEncoder.encode(this.#state.settings);	
+		const encodedSettings = this.#settingsEncoder.encode(this.#state.settings);
 		document.getElementById("buildingCode").value = encodedSettings;
 	}
 
-	onEncodedSettingsChange(encodedSettings){
+	onEncodedSettingsChange(encodedSettings) {
 		// solves issue if unicode character is >1 code units 
-		if ([...encodedSettings].length != 5){
+		if ([...encodedSettings].length != 5) {
 			return;
 		}
 		const newState = this.#settingsEncoder.decode(encodedSettings);
