@@ -3,6 +3,8 @@ import { Decoration } from './enums/Decoration.js'
 import { Roof } from './enums/Roof.js'
 import { Windows } from './enums/Windows.js'
 import { BottomRowWindows } from './enums/BottomRowWindows.js'
+import { Door } from './enums/Door.js'
+import { DoorPosition } from './enums/DoorPosition.js'
 
 export class BuildingState {
 	constructor(settings = {}) {
@@ -39,13 +41,14 @@ export class BuildingState {
 		y: 48,
 		height: 8, // tiles
 		width: 8, // tiles
-		hasDoor: true,
+		door: Door.one,
 		hasWindowGap: true,
 		cladding: Cladding.brick,
 		decoration: Decoration.pokemonCenter,
 		roof: Roof.type2,
 		windows: Windows.singleTopRow,
-		bottomRowWindows: BottomRowWindows.none
+		bottomRowWindows: BottomRowWindows.none,
+		doorPosition: DoorPosition.farLeft
 	}
 
 	// properly name options/settings to the right thing across the code

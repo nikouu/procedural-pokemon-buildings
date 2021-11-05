@@ -3,6 +3,8 @@ import { Decoration } from './enums/Decoration.js'
 import { Roof } from './enums/Roof.js'
 import { Windows } from './enums/Windows.js'
 import { BottomRowWindows } from './enums/BottomRowWindows.js'
+import { Door } from './enums/Door.js'
+import { DoorPosition } from './enums/DoorPosition.js'
 
 export class BuildingGenerator {
 
@@ -254,8 +256,8 @@ export class BuildingGenerator {
 		} else if (this.#state.bottomRowWindows === BottomRowWindows.door && this.#state.hasDoor) {
 			// todo: tidy this up
 			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
-			this.#writeToArrayIfPossible(topRightDoorX+1, this.#state.height - 2, "RegularWindow");
-			this.#writeToArrayIfPossible(topRightDoorX+2, this.#state.height - 2, "RegularWindow");
+			this.#writeToArrayIfPossible(topRightDoorX + 1, this.#state.height - 2, "RegularWindow");
+			this.#writeToArrayIfPossible(topRightDoorX + 2, this.#state.height - 2, "RegularWindow");
 		}
 	}
 
@@ -263,7 +265,7 @@ export class BuildingGenerator {
 		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
 
 		// if no door, don't set door
-		if (!this.#state.hasDoor) {
+		if (!this.#state.door === Door.none) {
 			return;
 		}
 
@@ -277,17 +279,35 @@ export class BuildingGenerator {
 			return;
 		}
 
-		// if a seed happens in the future, use it here to work out which position the door is
-		// perhaps weigh it closer to the centre, but not true centre
-		let doorXValue = Math.round((this.#state.width - 2) * (1 / 2));
-		if (this.#state.width == 4) {
-			doorXValue = 2;
+		// the special two door case
+		if (this.#state.door === Door.two) {
+
+			return;
 		}
 
-		this.#writeToArrayIfPossible(doorXValue - 1, this.#state.height - 2, "Door00");
-		this.#writeToArrayIfPossible(doorXValue, this.#state.height - 2, "Door01");
-		this.#writeToArrayIfPossible(doorXValue - 1, this.#state.height - 1, "Door02");
-		this.#writeToArrayIfPossible(doorXValue, this.#state.height - 1, "Door03");
+		if (this.#state.door === Door.one) {
+			let topLeftDoorX = 0;
+			const availableWidth = this.#state.width -2; // we dont want to include the outside of the building as space to put a door
+
+			if (availableWidth < 5){
+				topLeftDoorX = Math.round((this.#state.width - 2) / 2);
+			} else if (this.#state.doorPosition === DoorPosition.farLeft) {
+				topLeftDoorX = 2;
+			} else if (this.#state.doorPosition === DoorPosition.left) {
+				topLeftDoorX = Math.round(availableWidth * (1 / 3));
+			} else if (this.#state.doorPosition === DoorPosition.centre) {
+				topLeftDoorX = Math.round((availableWidth - 1) / 2);
+			} else if (this.#state.doorPosition === DoorPosition.right) {
+				topLeftDoorX = Math.round(availableWidth * (2 / 3));
+			} else if (this.#state.doorPosition === DoorPosition.farRight) {
+				topLeftDoorX = availableWidth - 2;
+			}
+
+			this.#writeToArrayIfPossible(topLeftDoorX, this.#state.height - 2, "Door00");
+			this.#writeToArrayIfPossible(topLeftDoorX + 1, this.#state.height - 2, "Door01");
+			this.#writeToArrayIfPossible(topLeftDoorX, this.#state.height - 1, "Door02");
+			this.#writeToArrayIfPossible(topLeftDoorX + 1, this.#state.height - 1, "Door03");
+		}	
 	}
 
 	// work out later how to maybe make them not aware of each other?
@@ -300,7 +320,7 @@ export class BuildingGenerator {
 		}
 
 		// too small (width) to have a door and a sign, though this statement is also including gym signs...
-		if (this.#state.hasDoor && this.#state.width < 8) {
+		if (this.#state.door !== Door.none && this.#state.width < 8) {
 			return;
 		}
 
