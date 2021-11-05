@@ -1,6 +1,7 @@
 import { Cladding } from './enums/Cladding.js'
 import { Decoration } from './enums/Decoration.js'
 import { Roof } from './enums/Roof.js'
+import { Windows } from './enums/Windows.js'
 
 export class BuildingGenerator {
 
@@ -173,8 +174,6 @@ export class BuildingGenerator {
 			this.#writeToArrayIfPossible(this.#state.width - 1, 7, "SlantedRoof12");
 			this.#writeToArrayIfPossible(this.#state.width - 2, 7, "SlantedRoof11");
 
-
-
 			const horizontalRoofWidthInTiles = this.#state.width - 2;
 			for (let i = 2; i < horizontalRoofWidthInTiles; i++) {
 				this.#writeToArrayIfPossible(i, 0, "HatchedRoof00");
@@ -222,8 +221,18 @@ export class BuildingGenerator {
 	#setWindows() {
 		const bottomOfRoof = this.#calculateDepth(this.#state.roof);
 
-		for (let x = 1; x < this.#state.width - 1; x++) {
-			this.#writeToArrayIfPossible(x, bottomOfRoof, "RegularWindow");
+		if (this.#state.windows === Windows.noWindows){
+			return;
+		} else if (this.#state.windows === Windows.singleTopRow){
+			for (let x = 1; x < this.#state.width - 1; x++) {
+				this.#writeToArrayIfPossible(x, bottomOfRoof, "RegularWindow");
+			}
+		} else if (this.#state.windows === Windows.filledRows){
+			for (let x = 1; x < this.#state.width - 1; x++) {
+				for(let y = bottomOfRoof; y < this.#state.height - 2; y+=2){
+					this.#writeToArrayIfPossible(x, y, "RegularWindow");
+				}				
+			}
 		}
 	}
 

@@ -18,7 +18,7 @@ export class UserSettings {
 				return;
 			}
 
-			if (event.target.name === "cladding" || event.target.name === "decoration" || event.target.name === "roof") {
+			if (event.target.name === "cladding" || event.target.name === "decoration" || event.target.name === "roof"|| event.target.name === "windows") {
 				this.#state.settings[event.target.name] = +event.target.value;
 			} else {
 				this.#state.settings[event.target.name] = event.target.value;
@@ -45,6 +45,7 @@ export class UserSettings {
 		this.#element.hasWindowGap.value = this.#state.settings.hasWindowGap;
 		this.#element.cladding.value = this.#state.settings.cladding;
 		this.#element.decoration.value = this.#state.settings.decoration;
+		this.#element.windows.value = this.#state.settings.windows;
 
 		this.#setEncodedSettingsString();
 	}
@@ -56,7 +57,7 @@ export class UserSettings {
 
 	onEncodedSettingsChange(encodedSettings) {
 		// solves issue if unicode character is >1 code units 
-		if ([...encodedSettings].length != 5) {
+		if ([...encodedSettings].length != 6) {
 			return;
 		}
 		const newState = this.#settingsEncoder.decode(encodedSettings);

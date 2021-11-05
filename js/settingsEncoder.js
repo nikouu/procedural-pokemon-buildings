@@ -8,10 +8,14 @@ export class SettingsEncoder {
 	encode(state) {
 		const encodedXY = `${String.fromCharCode(state.x + this.#offset)}${String.fromCharCode(state.y + this.#offset)}`
 		const encodedSize = `${String.fromCharCode(state.width + this.#offset)}${String.fromCharCode(state.height + this.#offset)}`
-		const stringSettings = `${+state.hasDoor}${+state.hasWindowGap}${state.cladding}${state.decoration}${state.roof}`
-		const encodedSettings = String.fromCharCode(+stringSettings+ this.#offset);
 
-		const encodedState = `${encodedXY}${encodedSize}${encodedSettings}`;
+		const windowSettings = `${+state.windows}${+state.hasWindowGap}`;
+		const encodedWindowSettings = String.fromCharCode(+windowSettings+ this.#offset); 
+
+		const otherSettings = `${+state.hasDoor}${+state.cladding}${+state.decoration}${+state.roof}`
+		const encodedSettings = String.fromCharCode(+otherSettings+ this.#offset);
+
+		const encodedState = `${encodedXY}${encodedSize}${encodedWindowSettings}${encodedSettings}`;
 
 		return encodedState;
 	}
@@ -23,13 +27,17 @@ export class SettingsEncoder {
 		const width = string.charCodeAt(2) - this.#offset;
 		const height = string.charCodeAt(3) - this.#offset;
 
-		const decodedSettings = (string.charCodeAt(4) - this.#offset).toString();
+		const decodedWindowSettings = (string.charCodeAt(4) - this.#offset).toString(); 
 
-		const hasDoor = !!decodedSettings[0];
-		const hasWindowGap = !!decodedSettings[1];
-		const cladding = decodedSettings[2];
-		const decoration = decodedSettings[3];
-		const roof = +decodedSettings[4];
+		const windows = +decodedWindowSettings[0];
+		const hasWindowGap = +decodedWindowSettings[1];
+
+		const decodedOtherSettings = (string.charCodeAt(5) - this.#offset).toString();
+
+		const hasDoor = !!decodedOtherSettings[0];
+		const cladding = decodedOtherSettings[1];
+		const decoration = decodedOtherSettings[2];
+		const roof = +decodedOtherSettings[3];
 
 		return {
 			x,
@@ -40,7 +48,8 @@ export class SettingsEncoder {
 			hasWindowGap,
 			cladding,
 			decoration,
-			roof
+			roof,
+			windows
 		}
 	}	
 }
