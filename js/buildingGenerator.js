@@ -253,11 +253,15 @@ export class BuildingGenerator {
 			for (let x = 1; x < this.#state.width - 1; x++) {
 				this.#writeToArrayIfPossible(x, this.#state.height - 2, "RegularWindow");
 			}
-		} else if (this.#state.bottomRowWindows === BottomRowWindows.door && this.#state.hasDoor) {
-			// todo: tidy this up
-			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
-			this.#writeToArrayIfPossible(topRightDoorX + 1, this.#state.height - 2, "RegularWindow");
-			this.#writeToArrayIfPossible(topRightDoorX + 2, this.#state.height - 2, "RegularWindow");
+		} else if (this.#state.bottomRowWindows === BottomRowWindows.door) {
+			if (this.#state.door === Door.one) {
+				// todo: tidy this up
+				const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
+				this.#writeToArrayIfPossible(topRightDoorX + 1, this.#state.height - 2, "RegularWindow");
+				this.#writeToArrayIfPossible(topRightDoorX + 2, this.#state.height - 2, "RegularWindow");
+			} else if (this.#state.door === Door.two) {
+
+			}
 		}
 	}
 
@@ -287,9 +291,9 @@ export class BuildingGenerator {
 
 		if (this.#state.door === Door.one) {
 			let topLeftDoorX = 0;
-			const availableWidth = this.#state.width -2; // we dont want to include the outside of the building as space to put a door
+			const availableWidth = this.#state.width - 2; // we dont want to include the outside of the building as space to put a door
 
-			if (availableWidth < 5){
+			if (availableWidth < 5) {
 				topLeftDoorX = Math.round((this.#state.width - 2) / 2);
 			} else if (this.#state.doorPosition === DoorPosition.farLeft) {
 				topLeftDoorX = 2;
@@ -307,7 +311,7 @@ export class BuildingGenerator {
 			this.#writeToArrayIfPossible(topLeftDoorX + 1, this.#state.height - 2, "Door01");
 			this.#writeToArrayIfPossible(topLeftDoorX, this.#state.height - 1, "Door02");
 			this.#writeToArrayIfPossible(topLeftDoorX + 1, this.#state.height - 1, "Door03");
-		}	
+		}
 	}
 
 	// work out later how to maybe make them not aware of each other?
