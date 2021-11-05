@@ -137,8 +137,54 @@ export class BuildingGenerator {
 				this.#writeToArrayIfPossible(i, 3, "HorizontalRoof02");
 			}
 
-		} else if (this.#state.roof === Roof.type4) {
+		} else if (this.#state.roof === Roof.type4) {			
+			this.#writeToArrayIfPossible(0, 0, "SlantedRoof00");
+			this.#writeToArrayIfPossible(1, 0, "SlantedRoof01");
+			this.#writeToArrayIfPossible(0, 1, "SlantedRoof06");
+			this.#writeToArrayIfPossible(1, 1, "SlantedRoof16");
+			this.#writeToArrayIfPossible(0, 2, "SlantedRoof06");
+			this.#writeToArrayIfPossible(1, 2, "SlantedRoof16");
+			this.#writeToArrayIfPossible(0, 3, "SlantedRoof06");
+			this.#writeToArrayIfPossible(1, 3, "SlantedRoof04");
+			this.#writeToArrayIfPossible(0, 4, "SlantedRoof06");
+			this.#writeToArrayIfPossible(1, 4, "SlantedRoof16");
+			this.#writeToArrayIfPossible(0, 5, "SlantedRoof06");
+			this.#writeToArrayIfPossible(1, 5, "SlantedRoof16");
+			this.#writeToArrayIfPossible(0, 6, "SlantedRoof06");
+			this.#writeToArrayIfPossible(1, 6, "SlantedRoof04");			
+			this.#writeToArrayIfPossible(0, 7, "SlantedRoof09");
+			this.#writeToArrayIfPossible(1, 7, "SlantedRoof10");
+			
 
+			this.#writeToArrayIfPossible(this.#state.width - 1, 0, "SlantedRoof03");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 0, "SlantedRoof02");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 1, "SlantedRoof08");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 1, "SlantedRoof16");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 2, "SlantedRoof08");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 2, "SlantedRoof16");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 3, "SlantedRoof08");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 3, "SlantedRoof07");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 4, "SlantedRoof08");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 4, "SlantedRoof16");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 5, "SlantedRoof08");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 5, "SlantedRoof16");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 6, "SlantedRoof08");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 6, "SlantedRoof07");
+			this.#writeToArrayIfPossible(this.#state.width - 1, 7, "SlantedRoof12");
+			this.#writeToArrayIfPossible(this.#state.width - 2, 7, "SlantedRoof11");
+
+
+
+			const horizontalRoofWidthInTiles = this.#state.width - 2;
+			for (let i = 2; i < horizontalRoofWidthInTiles; i++) {
+				this.#writeToArrayIfPossible(i, 0, "HatchedRoof00");
+				this.#writeToArrayIfPossible(i, 1, "HatchedRoof01");
+				this.#writeToArrayIfPossible(i, 2, "HatchedRoof01");
+				this.#writeToArrayIfPossible(i, 3, "HorizontalRoof02");
+				this.#writeToArrayIfPossible(i, 4, "HatchedRoof01");
+				this.#writeToArrayIfPossible(i, 5, "HatchedRoof01");
+				this.#writeToArrayIfPossible(i, 6, "HorizontalRoof02");
+			}
 		}
 	}
 
@@ -265,7 +311,7 @@ export class BuildingGenerator {
 			case Roof.type3:
 				return 4;
 			case Roof.type4:
-				return 8;
+				return 7;
 		}
 	}
 }
