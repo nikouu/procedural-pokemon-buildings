@@ -1,3 +1,11 @@
+import { Cladding } from './enums/Cladding.js'
+import { Decoration } from './enums/Decoration.js'
+import { Roof } from './enums/Roof.js'
+import { Windows } from './enums/Windows.js'
+import { BottomRowWindows } from './enums/BottomRowWindows.js'
+import { Door } from './enums/Door.js'
+import { DoorPosition } from './enums/DoorPosition.js'
+
 export class UserSettings {
 	constructor(id, state, settingsEncoder) {
 		window.app.userSettings = this;
@@ -38,6 +46,10 @@ export class UserSettings {
 		this.#element.addEventListener('submit', (event) => {
 			event.preventDefault();
 		});
+
+		this.#element.randomButton.addEventListener('click', (event) => {
+			this.setRandomState();
+		});
 	}
 
 	onStateChange(key, state) {
@@ -68,6 +80,22 @@ export class UserSettings {
 			return;
 		}
 		const newState = this.#settingsEncoder.decode(encodedSettings);
+		Object.keys(newState).forEach(key => this.#state.settings[key] = newState[key]);
+	}
+
+	setRandomState(){
+		let newState = {};
+
+		newState.door = Door[Object.keys(Door)[Math.floor(Math.random() * Object.keys(Door).length)]]			
+		newState.hasWindowGap = Math.random() < 0.5;
+		newState.cladding = Cladding[Object.keys(Cladding)[Math.floor(Math.random() * Object.keys(Cladding).length)]]
+		newState.decoration = Decoration[Object.keys(Decoration)[Math.floor(Math.random() * Object.keys(Decoration).length)]]
+		newState.roof = Roof[Object.keys(Roof)[Math.floor(Math.random() * Object.keys(Roof).length)]]
+		newState.windows = Windows[Object.keys(Windows)[Math.floor(Math.random() * Object.keys(Windows).length)]]
+		newState.bottomRowWindows = BottomRowWindows[Object.keys(BottomRowWindows)[Math.floor(Math.random() * Object.keys(BottomRowWindows).length)]]
+		newState.doorPosition = DoorPosition[Object.keys(DoorPosition)[Math.floor(Math.random() * Object.keys(DoorPosition).length)]]
+
+
 		Object.keys(newState).forEach(key => this.#state.settings[key] = newState[key]);
 	}
 }

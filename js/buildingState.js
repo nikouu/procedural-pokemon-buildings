@@ -22,7 +22,6 @@ export class BuildingState {
 	
 				// notify subscrubers
 				self.#subscribers.forEach(callback => callback(key, state, oldState));
-				console.log(state)
 				return state;
 			}
 		})

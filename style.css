@@ -68,16 +68,29 @@
     padding: 20px;
 }
 
-#buildingCode {
-    height:35px;
-    font-size: 30px;
-    width:220px;
-}
 
 input[type="radio"] {
     cursor: pointer;
 }
 
 label {
+    cursor: pointer;
+}
+
+.building-code-area {
+    display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+#buildingCode{
+    font-size: 25px;
+    width:180px;
+
+}
+
+#randomButton {
+    font-size: 25px; 
     cursor: pointer;
 }
