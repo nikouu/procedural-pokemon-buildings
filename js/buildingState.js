@@ -42,7 +42,7 @@ export class BuildingState {
 		height: 8, // tiles
 		width: 8, // tiles
 		door: Door.one,
-		hasWindowGap: true,
+		hasWindowGap: false,
 		cladding: Cladding.brick,
 		decoration: Decoration.pokemonCenter,
 		roof: Roof.type2,
