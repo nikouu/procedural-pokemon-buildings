@@ -10,23 +10,26 @@
 </head>
 
 <body class="content margin-auto">
-    <div class="text-center ">
+    <div class="text-center">
         <h1 class="pokemon-font">Procedural Pokémon Building Generation</h1>
         <h2 class="pokemon-font">Generation one style Pokémon buildings</h2>
     </div>
 
-    <div class="grid sg-grid" style="background-color: rgb(114, 71, 71)">
+    <div class="grid sg-grid">
         <div id="loading">
             <div class="overlay" style="opacity: 0.7">
             </div>
             <img src="loading.gif" style="opacity: 1;" />
         </div>
 
-        <div class="col col-lg" style="background-color: rgb(248, 157, 175); width:700px;">
-            <canvas id="canvas"></canvas>
+        <div  class="col col-lg" style="background-color: rgb(248, 157, 175);">
+            <div id="canvasCol">
+                <canvas id="canvas"></canvas>
+            </div>        
         </div>
-        <form id="settings">
-            <div class="col col-lg pokemon-font text-center" style="background-color: rgb(175, 248, 157);">
+
+        <div id="settingsCol" class="col col-lg pokemon-font text-center">
+            <form id="settings">
                 <h3>Settings</h3>
 
                 <div class="padding-10">
@@ -59,7 +62,7 @@
                 </div>
 
                 <div class="padding-10">
-                    <div class="bold">Bottom Row Windows</div>                
+                    <div class="bold">Bottom Row Windows</div>
 
                     <input type="radio" id="bottomRowWindowsNone" name="bottomRowWindows" value="0">
                     <label for="bottomRowWindowsNone">None</label>
@@ -111,9 +114,9 @@
 
                     <input type="radio" id="doorPositionFarRight" name="doorPosition" value="4">
                     <label for="doorPositionFarRight">Far Right</label>
-                                       
+
                 </div>
-                
+
                 <div class="padding-10">
                     <div class="bold">Cladding</div>
 
@@ -150,11 +153,12 @@
                     <div class="bold">Code</div>
                     <div class="building-code-area">
                         <input id="buildingCode" autocomplete="off" class="pokemon-font text-center" type="text" />
-                        <button id="randomButton" type="button"  class="pokemon-font">Random</button>
-                    </div>                    
+                        <button id="randomButton" type="button" class="pokemon-font">Random</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
+
     </div>
 
     <div>
@@ -169,12 +173,14 @@
         <p>Reference for this work in my post <a target="_blank"
                 href="https://www.nikouusitalo.com/blog/looking-at-pixels-part-3-lets-look-at-each-building-type-in-gen-1-pokemon/">Looking
                 At Pixels Part 3: Let's Look at Each Building Type in Gen 1 Pokémon</a>.</p>
-        <p>See more of my stuff at: <a target="_blank" href="https://www.nikouusitalo.com/">nikouusitalo.com</a> or the source on <a target="_blank" href="https://github.com/nikouu/procedural-pokemon-buildings">Github</a>.</p>
+        <p>See more of my stuff at: <a target="_blank" href="https://www.nikouusitalo.com/">nikouusitalo.com</a> or the
+            source on <a target="_blank" href="https://github.com/nikouu/procedural-pokemon-buildings">Github</a>.</p>
     </div>
     <div>
         <h3>Hints</h3>
         <ul>
-            <li>Some features may not show for various reasons. For example: the double gym signs don't show if the building is too narrow Another is the windows next to the door don't show if a sign is selected. </li>
+            <li>Some features may not show for various reasons. For example: the double gym signs don't show if the
+                building is too narrow. Another is the windows next to the door don't show if a sign is selected.</li>
         </ul>
     </div>
 </body>

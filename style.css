@@ -94,3 +94,12 @@ label {
     font-size: 25px; 
     cursor: pointer;
 }
+
+#settingsCol {
+    background-image: url(background.png);
+}
+
+#canvasCol {
+    width:100%;
+    height: 100%;
+}

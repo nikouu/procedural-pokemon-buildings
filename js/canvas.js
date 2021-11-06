@@ -38,8 +38,11 @@ export class Canvas {
 
 		// weird fix for blurry canvas 
 		// https://stackoverflow.com/questions/30549556/fabric-js-images-blurry?rq=1
-		this.fabricCanvas.setWidth(this.width);
-		this.fabricCanvas.setHeight(this.height);
+		//this.fabricCanvas.setWidth(this.width);
+		//this.fabricCanvas.setHeight(this.height);
+
+		this.fabricCanvas.setWidth(document.getElementById("canvasCol").clientWidth);
+		this.fabricCanvas.setHeight(document.getElementById("canvasCol").clientHeight);
 		this.fabricCanvas.requestRenderAll();
 
 		this.#setupGrid();
@@ -47,11 +50,19 @@ export class Canvas {
 		this.#setupEvents();
 
 		this.#state.addSubscriber(this.onStateChange.bind(this));
+
+		window.addEventListener('resize', this.resizeCanvas.bind(this));
 	}
 
 	#state;
 
 	#buildingGenerator;
+
+	resizeCanvas() {
+		const canvasContainer = document.getElementById('canvasCol');	
+		this.fabricCanvas.setDimensions({width: canvasContainer.clientWidth, height: canvasContainer.clientHeight});
+	}
+	
 
 	onStateChange(key, state, oldState){
 		this.#buildingGenerator.setState(this.#state.settings);
