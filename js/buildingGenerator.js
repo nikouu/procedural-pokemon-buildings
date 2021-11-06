@@ -340,7 +340,15 @@ export class BuildingGenerator {
 
 		const signXValue = Math.round((this.#state.width - 2) * (1 / 2));
 		if (this.#state.decoration === Decoration.pokemonCenter) {
+			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
 
+			// dont put a sign down if it goes over the door. terrible check. todo: fix
+			if (topRightDoorX === signXValue + 1 
+				|| topRightDoorX === signXValue + 2 
+				|| topRightDoorX - 1 === signXValue + 1 
+				|| topRightDoorX -1 === signXValue + 2){
+				return;
+			}
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 2, "PokemonCenterLeft");
 			this.#writeToArrayIfPossible(signXValue + 2, this.#state.height - 2, "PokemonCenterRight");
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 1, "DecorationSignBase", true);
@@ -348,6 +356,14 @@ export class BuildingGenerator {
 		}
 
 		if (this.#state.decoration === Decoration.pokemart) {
+			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
+			// dont put a sign down if it goes over the door. terrible check. todo: fix
+			if (topRightDoorX === signXValue + 1 
+				|| topRightDoorX === signXValue + 2 
+				|| topRightDoorX - 1 === signXValue + 1 
+				|| topRightDoorX -1 === signXValue + 2){
+				return;
+			}
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 2, "PokeMartLeft");
 			this.#writeToArrayIfPossible(signXValue + 2, this.#state.height - 2, "PokeMartRight");
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 1, "DecorationSignBase", true);
