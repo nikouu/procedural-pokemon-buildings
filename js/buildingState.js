@@ -48,7 +48,7 @@ export class BuildingState {
 		roof: Roof.type2,
 		windows: Windows.singleTopRow,
 		bottomRowWindows: BottomRowWindows.none,
-		doorPosition: DoorPosition.farLeft
+		doorPosition: DoorPosition.left
 	}
 
 	// properly name options/settings to the right thing across the code

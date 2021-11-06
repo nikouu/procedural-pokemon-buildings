@@ -214,7 +214,13 @@ export class BuildingGenerator {
 
 		for (let x = 1; x < this.#state.width - 1; x++) {
 			for (let y = bottomOfRoof; y < this.#state.height - 1; y++) {
-				if (this.#state.cladding === Cladding.wood) {
+				if (this.#state.cladding === Cladding.both && x < 4) {
+					this.#writeToArrayIfPossible(x, y, "WoodCladding");
+				}
+				else if (this.#state.cladding === Cladding.both && x >= 4) {
+					this.#writeToArrayIfPossible(x, y, "BrickCladding");
+				}
+				else if (this.#state.cladding === Cladding.wood) {
 					this.#writeToArrayIfPossible(x, y, "WoodCladding");
 				} else if (this.#state.cladding === Cladding.brick) {
 					this.#writeToArrayIfPossible(x, y, "BrickCladding");
@@ -422,7 +428,7 @@ export class BuildingGenerator {
 	#calculateDepth(roofType) {
 		switch (roofType) {
 			case Roof.type1:
-				return 1
+				return 2
 			case Roof.type2:
 				return 4;
 			case Roof.type3:
