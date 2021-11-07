@@ -32,7 +32,7 @@ export class Canvas {
 			{
 				preserveObjectStacking: true,
 				selection: false,
-				backgroundColor: '#abbbc5'
+				backgroundColor: '#919191'
 			}
 		);
 
