@@ -419,7 +419,7 @@ export class Canvas {
 	}
 
 	async loadSprites() {
-		let spriteSheet = new SpriteSheet("/spritesheets/original-spritesheet-6x.png", 48, 48, 6);
+		let spriteSheet = new SpriteSheet("spritesheets/original-spritesheet-6x.png", 48, 48, 6);
 		await spriteSheet.getSpriteMap().then(result => {
 			this.spriteMap = result;
 
