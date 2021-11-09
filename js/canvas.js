@@ -35,11 +35,6 @@ export class Canvas {
 			}
 		);
 
-		// weird fix for blurry canvas 
-		// https://stackoverflow.com/questions/30549556/fabric-js-images-blurry?rq=1
-		//this.fabricCanvas.setWidth(this.width);
-		//this.fabricCanvas.setHeight(this.height);
-
 		this.fabricCanvas.setWidth(document.getElementById("canvasCol").clientWidth);
 		this.fabricCanvas.setHeight(document.getElementById("canvasCol").clientHeight);
 		this.fabricCanvas.requestRenderAll();
@@ -66,14 +61,6 @@ export class Canvas {
 	onStateChange(key, state, oldState){
 		this.#buildingGenerator.setState(this.#state.settings);
 
-		//this.currentXScale = this.#state.settings.width;
-		//this.currentYScale = this.#state.settings.height;
-
-		// const attrs = {
-		// 	scaleX: this.currentXScale,
-		// 	scaleY: this.currentYScale
-		// }
-
 		const attrs = {
 			scaleX: this.#state.settings.width,
 			scaleY: this.#state.settings.height
@@ -84,14 +71,12 @@ export class Canvas {
 		const generatedBuilding = this.#buildingGenerator.generate();
 
 		this.#placeTiles(attrs, generatedBuilding, selectionRectangle);
-
 	}
 
 	#setupGrid() {
 		for (let i = 0; i < this.maxWidthInCells; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
-			// the -1 is such that the bottom right corner is covered
-
+			// the -this.gridSize is such that the bottom right corner is covered
 			const verticalStartCoords = [i * this.gridSize, 0];
 			const verticalEndCoords = [i * this.gridSize, this.maxHeightInCells * this.gridSize - this.gridSize];
 
@@ -108,8 +93,7 @@ export class Canvas {
 
 		for (let i = 0; i < this.maxHeightInCells; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
-			// the -1 is such that the bottom right corner is covered
-
+			// the -this.gridSize is such that the bottom right corner is covered
 			const horizontalStartCoords = [0, i * this.gridSize];
 			const horizontalEndCoords = [this.maxWidthInCells * this.gridSize - this.gridSize , i * this.gridSize]
 
@@ -307,11 +291,7 @@ export class Canvas {
 
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
-
-		//this.#buildingGenerator.setState(this.#state.settings);
-		//let generatedBuilding = this.#buildingGenerator.generate();
-
-		//this.#placeTiles(attrs, generatedBuilding, scaledObject);
+	
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
 
@@ -319,13 +299,6 @@ export class Canvas {
 		this.#state.settings.y = this.#snap(scaledObject.top);
 		this.#state.settings.width = this.currentXScale;
 		this.#state.settings.height = this.currentYScale;
-
-		// const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
-	
-		// 	const generatedBuilding = this.#buildingGenerator.generate();
-	
-		// 	this.#placeTiles(attrs, generatedBuilding, selectionRectangle);
-
 	}
 
 	#onZooming(event) {
@@ -337,29 +310,6 @@ export class Canvas {
 		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
 		event.e.preventDefault();
 		event.e.stopPropagation();
-
-
-		// http://fabricjs.com/fabric-intro-part-5
-		let vpt = this.fabricCanvas.viewportTransform;
-
-
-
-		// if (zoom < 400 / 1000) {
-		// 	vpt[4] = 200 - 1000 * zoom / 2;
-		// 	vpt[5] = 200 - 1000 * zoom / 2;
-		// } else {
-		// 	if (vpt[4] >= 0) {
-		// 		vpt[4] = 0;
-		// 	} else if (vpt[4] < this.fabricCanvas.getWidth() - 1000 * zoom) {
-		// 		vpt[4] = this.fabricCanvas.getWidth() - 1000 * zoom;
-		// 	}
-		// 	if (vpt[5] >= 0) {
-		// 		vpt[5] = 0;
-		// 	} else if (vpt[5] < this.fabricCanvas.getHeight() - 1000 * zoom) {
-		// 		vpt[5] = this.fabricCanvas.getHeight() - 1000 * zoom;
-		// 	}
-		// }
-
 	}
 
 	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ
@@ -372,7 +322,6 @@ export class Canvas {
 	}
 
 	#placeTiles(attrs, generatedBuilding, scaledObject) {
-
 		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
 
 		// clear existing tiles
