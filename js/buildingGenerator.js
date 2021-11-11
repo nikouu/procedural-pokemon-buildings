@@ -242,7 +242,7 @@ export class BuildingGenerator {
 			return;
 		} else if (this.#state.windows === Windows.singleTopRow) {
 			for (let x = 1; x < this.#state.width - 1; x++) {
-				if (bottomOfRoof === this.#state.height - 4 && this.#state.hasWindowGap && (x === topRightDoorX || x === topRightDoorX + 1)){
+				if (bottomOfRoof === this.#state.height - 4 && this.#state.hasWindowGap && (x === topRightDoorX || x === topRightDoorX + 1)) {
 
 				} else {
 					this.#writeToArrayIfPossible(x, bottomOfRoof, "RegularWindow");

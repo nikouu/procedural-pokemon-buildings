@@ -10,16 +10,16 @@ export class BuildingState {
 	constructor(settings = {}) {
 		window.app.buildingState = this;
 		let self = this; //ew
-		
+
 		this.#settings = Object.assign(this.#default, settings);
 
 		this.settings = new Proxy(this.#settings, {
 			set(state, key, value, receiver) {
-				const oldState = {...state};
+				const oldState = { ...state };
 				const newValue = value === 'true' || (value === 'false' ? false : value);	//cleans up truthy true/false		
-	
+
 				state[key] = newValue;
-	
+
 				// notify subscrubers
 				self.#subscribers.forEach(callback => callback(key, state, oldState));
 				return state;
@@ -54,12 +54,12 @@ export class BuildingState {
 	#settings = {}
 
 
-	getState(){
+	getState() {
 		return JSON.parse(JSON.stringify(this.#settings));
 	}
 
-	setState(settings = {}){
+	setState(settings = {}) {
 		this.#settings = Object.assign(this.#default, settings);
-		
+
 	}
 }

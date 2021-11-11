@@ -3,6 +3,5 @@ export const Decoration = {
 	pokemonCenter: 1,
 	pokemart: 2,
 	gym: 3,
-	doubleGym: 4,
-
+	doubleGym: 4
 }

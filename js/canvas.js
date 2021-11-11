@@ -53,12 +53,12 @@ export class Canvas {
 	#buildingGenerator;
 
 	resizeCanvas() {
-		const canvasContainer = document.getElementById('canvasCol');	
-		this.fabricCanvas.setDimensions({width: canvasContainer.clientWidth, height: canvasContainer.clientHeight});
+		const canvasContainer = document.getElementById('canvasCol');
+		this.fabricCanvas.setDimensions({ width: canvasContainer.clientWidth, height: canvasContainer.clientHeight });
 	}
-	
 
-	onStateChange(key, state, oldState){
+
+	onStateChange(key, state, oldState) {
 		this.#buildingGenerator.setState(this.#state.settings);
 
 		const attrs = {
@@ -95,7 +95,7 @@ export class Canvas {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
 			// the -this.gridSize is such that the bottom right corner is covered
 			const horizontalStartCoords = [0, i * this.gridSize];
-			const horizontalEndCoords = [this.maxWidthInCells * this.gridSize - this.gridSize , i * this.gridSize]
+			const horizontalEndCoords = [this.maxWidthInCells * this.gridSize - this.gridSize, i * this.gridSize]
 
 			let horizontalLine = new fabric.Line(horizontalStartCoords.concat(horizontalEndCoords), {
 				stroke: '#fff',
@@ -104,13 +104,13 @@ export class Canvas {
 				hoverCursor: 'default'
 			});
 
-			this.fabricCanvas.add(horizontalLine);	
+			this.fabricCanvas.add(horizontalLine);
 			this.fabricCanvas.moveTo(horizontalLine, 0);
 		}
 	}
 
 	#setupSelectorRectangle() {
-		this.currentXScale = this.#state.settings.width 
+		this.currentXScale = this.#state.settings.width
 		this.currentYScale = this.#state.settings.height
 
 		const selectionRect = new fabric.Rect({
@@ -291,11 +291,11 @@ export class Canvas {
 
 		// clear existing tiles
 		this.fabricCanvas.remove(...objectsToRemove);
-	
+
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
 
-		this.#state.settings.x= this.#snap(scaledObject.left);
+		this.#state.settings.x = this.#snap(scaledObject.left);
 		this.#state.settings.y = this.#snap(scaledObject.top);
 		this.#state.settings.width = this.currentXScale;
 		this.#state.settings.height = this.currentYScale;
@@ -371,7 +371,7 @@ export class Canvas {
 		await spriteSheet.getSpriteMap().then(result => {
 			this.spriteMap = result;
 
-			
+
 
 		}).then(() => {
 			const attrs = {
@@ -381,28 +381,12 @@ export class Canvas {
 
 			this.currentXScale = attrs.scaleX;
 			this.currentYScale = attrs.scaleY;
-	
+
 			const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
-	
+
 			const generatedBuilding = this.#buildingGenerator.generate();
-	
+
 			this.#placeTiles(attrs, generatedBuilding, selectionRectangle);
 		});
-	}
-
-	getX() {
-		return this.selectionCoords.x;
-	}
-
-	getY() {
-		return this.selectionCoords.y;
-	}
-
-	getWidth() {
-		return this.currentXScale;
-	}
-
-	getHeight() {
-		return this.currentYScale;
 	}
 }

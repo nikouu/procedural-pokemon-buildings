@@ -26,15 +26,15 @@ export class UserSettings {
 				return;
 			}
 
-			if (event.target.name === "cladding" 
-			|| event.target.name === "decoration" 
-			|| event.target.name === "roof" 
-			|| event.target.name === "windows"
-			|| event.target.name === "bottomRowWindows"
-			|| event.target.name === "door"
-			|| event.target.name === "doorPosition") {
+			if (event.target.name === "cladding"
+				|| event.target.name === "decoration"
+				|| event.target.name === "roof"
+				|| event.target.name === "windows"
+				|| event.target.name === "bottomRowWindows"
+				|| event.target.name === "door"
+				|| event.target.name === "doorPosition") {
 				this.#state.settings[event.target.name] = +event.target.value;
-			}  else {
+			} else {
 				this.#state.settings[event.target.name] = event.target.value;
 			}
 		});
@@ -83,10 +83,10 @@ export class UserSettings {
 		Object.keys(newState).forEach(key => this.#state.settings[key] = newState[key]);
 	}
 
-	setRandomState(){
+	setRandomState() {
 		let newState = {};
 
-		newState.door = Door[Object.keys(Door)[Math.floor(Math.random() * Object.keys(Door).length)]]			
+		newState.door = Door[Object.keys(Door)[Math.floor(Math.random() * Object.keys(Door).length)]]
 		newState.hasWindowGap = Math.random() < 0.5;
 		newState.cladding = Cladding[Object.keys(Cladding)[Math.floor(Math.random() * Object.keys(Cladding).length)]]
 		newState.decoration = Decoration[Object.keys(Decoration)[Math.floor(Math.random() * Object.keys(Decoration).length)]]
