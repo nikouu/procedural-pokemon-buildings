@@ -57,14 +57,11 @@ export class UserSettings {
 	}
 
 	setSettingsUI() {
-		this.#element.roof.value = this.#state.settings.roof;
-		this.#element.door.value = this.#state.settings.door;
-		this.#element.hasWindowGap.value = this.#state.settings.hasWindowGap;
-		this.#element.cladding.value = this.#state.settings.cladding;
-		this.#element.decoration.value = this.#state.settings.decoration;
-		this.#element.windows.value = this.#state.settings.windows;
-		this.#element.bottomRowWindows.value = this.#state.settings.bottomRowWindows;
-		this.#element.doorPosition.value = this.#state.settings.doorPosition;
+		Object.keys(this.#state.settings).forEach((key) => {
+			if (this.#element[key] !== undefined){
+				this.#element[key].value = this.#state[key];
+			}			
+		});
 
 		this.#setEncodedSettingsString();
 	}
@@ -94,7 +91,6 @@ export class UserSettings {
 		newState.windows = Windows[Object.keys(Windows)[Math.floor(Math.random() * Object.keys(Windows).length)]]
 		newState.bottomRowWindows = BottomRowWindows[Object.keys(BottomRowWindows)[Math.floor(Math.random() * Object.keys(BottomRowWindows).length)]]
 		newState.doorPosition = DoorPosition[Object.keys(DoorPosition)[Math.floor(Math.random() * Object.keys(DoorPosition).length)]]
-
 
 		Object.keys(newState).forEach(key => this.#state.settings[key] = newState[key]);
 	}
