@@ -13,6 +13,7 @@ It turns out the low level API the canvas provides isn't fun to work with and as
 ## Features
 - Resize your building and have it generated on the fly
 - Drag the building around
+- Drag the canvas around
 - Change the features on the building (cladding, roof, doors or not, etc)
 - Save/paste your building via the building code
 - Generate a random building
