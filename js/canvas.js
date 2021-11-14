@@ -22,6 +22,7 @@ export class Canvas {
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.isPanning = false;
+		this.touchCoords;
 
 		// move these to a new object
 		this.currentXScale = 1;
@@ -142,10 +143,11 @@ export class Canvas {
 
 	#setupEvents() {
 		this.fabricCanvas.on({
+			'touch:drag': () => {console.log("touch drag")},
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
 			'mouse:wheel': this.#onZooming.bind(this),
-			'mouse:up': () => { this.isPanning = false; },
+			'mouse:up': () => { this.isPanning = false; this.touch = undefined},
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this)
 		});
@@ -312,12 +314,20 @@ export class Canvas {
 		event.e.stopPropagation();
 	}
 
+	// todo: cleanup rash attempt at making touch events work
 	// https://groups.google.com/g/fabricjs/c/FQ0EWKHNG90/m/oylD96ceBQAJ
 	#onMouseMoving(event) {
 		// target == null otherwise we would pan when scaling/panning the object
-		if (this.isPanning && event.target == null) {
+		if (this.isPanning && event.target == null && event.e.type !== "touchmove") {
 			const delta = new fabric.Point(event.e.movementX, event.e.movementY);
 			this.fabricCanvas.relativePan(delta);
+		} else if (this.isPanning & event.target == null && event.e.type === "touchmove") {
+			if (this.touch != undefined) {
+				const delta = new fabric.Point(event.e.touches[0].pageX - this.touch.pageX, event.e.touches[0].pageY - this.touch.pageY);
+				this.fabricCanvas.relativePan(delta);
+			}
+
+			this.touch = event.e.touches[0];
 		}
 	}
 
