@@ -143,7 +143,6 @@ export class Canvas {
 
 	#setupEvents() {
 		this.fabricCanvas.on({
-			'touch:drag': () => {console.log("touch drag")},
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
 			'mouse:wheel': this.#onZooming.bind(this),
@@ -304,8 +303,8 @@ export class Canvas {
 	}
 
 	#onZooming(event) {
-		var delta = event.e.deltaY;
-		var zoom = this.fabricCanvas.getZoom();
+		const delta = event.e.deltaY;
+		let zoom = this.fabricCanvas.getZoom();
 		zoom *= 0.999 ** delta;
 		if (zoom > 20) zoom = 20;
 		if (zoom < 0.01) zoom = 0.01;

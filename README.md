@@ -20,3 +20,6 @@ It turns out the low level API the canvas provides isn't fun to work with and as
 
 ## Live Demo
 https://nikouu.github.io/procedural-pokemon-buildings/
+
+## To do list
+https://github.com/nikouu/procedural-pokemon-buildings/projects/1
