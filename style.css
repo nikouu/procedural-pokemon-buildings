@@ -95,7 +95,7 @@ label {
     cursor: pointer;
 }
 
-#settingsCol {
+.background-grass {
     background-image: url(background.png);
 }
 
