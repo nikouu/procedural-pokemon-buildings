@@ -21,18 +21,17 @@
     margin-right: auto;
 }
 
-/* .sg-grid {
+.row {
     position: relative;
 }
 
-.sg-grid .col {
+div[class^="col-"] {
     min-height: 40px;
     padding: 8px;
     font-size: 16px;
     line-height: 32px;
-    background-color: #283a45;
     margin: 0 8px;    
-} */
+} 
 
 .overlay {
     width: 100%;
