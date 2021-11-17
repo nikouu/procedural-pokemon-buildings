@@ -3,7 +3,7 @@
 
 <head>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="flex-grid-lite.css">
+    <link rel="stylesheet" href="flexboxgrid.css">
     <script src="js/lib/fabric.js"></script>
     <script type="module" src="js/app.js"></script>
 </head>
@@ -14,20 +14,20 @@
         <h2 class="pokemon-font">Generation one style Pokémon buildings</h2>
     </div>
 
-    <div class="grid sg-grid">
+    <div class="row">
         <div id="loading">
             <div class="overlay" style="opacity: 0.7">
             </div>
             <img src="loading.gif" style="opacity: 1;" />
         </div>
 
-        <div class="col col-lg background-grass">
+        <div class="col-xs background-grass">
             <div id="canvasCol">
                 <canvas id="canvas"></canvas>
             </div>
         </div>
 
-        <div id="settingsCol" class="col col-lg pokemon-font text-center background-grass">
+        <div id="settingsCol" class="col-xs pokemon-font text-center background-grass">
             <form id="settings">
                 <h3>Settings</h3>
 

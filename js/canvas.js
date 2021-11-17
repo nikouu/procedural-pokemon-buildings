@@ -36,8 +36,10 @@ export class Canvas {
 			}
 		);
 
-		this.fabricCanvas.setWidth(document.getElementById("canvasCol").clientWidth);
-		this.fabricCanvas.setHeight(document.getElementById("canvasCol").clientHeight);
+		const largestDimension = document.getElementById("canvasCol").clientWidth > document.getElementById("canvasCol").clientHeight ?
+			document.getElementById("canvasCol").clientWidth : document.getElementById("canvasCol").clientHeight
+		this.fabricCanvas.setWidth(largestDimension);
+		this.fabricCanvas.setHeight(largestDimension);
 		this.fabricCanvas.requestRenderAll();
 
 		this.#setupGrid();
@@ -45,19 +47,11 @@ export class Canvas {
 		this.#setupEvents();
 
 		this.#state.addSubscriber(this.onStateChange.bind(this));
-
-		window.addEventListener('resize', this.resizeCanvas.bind(this));
 	}
 
 	#state;
 
 	#buildingGenerator;
-
-	resizeCanvas() {
-		const canvasContainer = document.getElementById('canvasCol');
-		this.fabricCanvas.setDimensions({ width: canvasContainer.clientWidth, height: canvasContainer.clientHeight });
-	}
-
 
 	onStateChange(key, state, oldState) {
 		this.#buildingGenerator.setState(this.#state.settings);
@@ -146,7 +140,7 @@ export class Canvas {
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
 			'mouse:wheel': this.#onZooming.bind(this),
-			'mouse:up': () => { this.isPanning = false; this.touch = undefined},
+			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this)
 		});
