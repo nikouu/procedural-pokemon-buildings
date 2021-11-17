@@ -59,7 +59,7 @@ export class UserSettings {
 	setSettingsUI() {
 		Object.keys(this.#state.settings).forEach((key) => {
 			if (this.#element[key] !== undefined){
-				this.#element[key].value = this.#state[key];
+				this.#element[key].value = this.#state.settings[key];
 			}			
 		});
 
