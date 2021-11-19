@@ -11,16 +11,6 @@ export class SpriteSheet {
 
 	#spriteMap = new Map();
 
-	loadImage(url) {
-		return new Promise(resolve => {
-			const image = new Image();
-			image.addEventListener('load', () => {
-				resolve(image);
-			});
-			image.src = url;
-		});
-	}
-
 	loadFabricImage(url) {
 		return new Promise(resolve => {
 			const image = fabric.util.createImage();
@@ -58,8 +48,6 @@ export class SpriteSheet {
 		};
 
 		return Promise.all(promiseArray).then(result => {
-			//this.#spriteMap.set(result.tileKey, result.sprite);
-
 			this.#spriteMap = new Map(result.map(obj => [obj.tileKey, obj.sprite]));
 		}).then(() => {
 			return this.#spriteMap;
