@@ -13,8 +13,6 @@ export class BuildingGenerator {
 		window.app.buildingGenerator = this;
 	}
 
-	// could create a proxy that prints the array everytime something is being written to it, to be like a graphic 
-	// representation as it gets built up
 	// top left (0,0)
 	#tileArray = [[]]
 
@@ -33,8 +31,6 @@ export class BuildingGenerator {
 	}
 
 	// generate a 2d array of tiles based on rules to construct a building
-	// thinking of doing a pass to assign the type of tile to each square then doing a 
-	// second pass to do the details, such as which roof edge to use
 	generate() {
 		//setup array
 		this.#tileArray = [...Array(this.#state.width)].map(() => Array(this.#state.height).fill(0));

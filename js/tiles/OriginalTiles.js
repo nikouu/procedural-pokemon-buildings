@@ -1,6 +1,5 @@
-// all the differen 8x8 tiles available
-// includes their idenifier and some way to grab the image. 
-// maybe a big spritesheet and this just stores the top left coord or something
+// All the different 8x8 tiles available
+// Includes their idenifier and x,y coordinates
 export const OriginalTiles = {
 	Empty : {
 		x: 0,

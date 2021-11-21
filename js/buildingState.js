@@ -33,8 +33,6 @@ export class BuildingState {
 		this.#subscribers.push(callback);
 	}
 
-	// it takes two tiles to create one floor. 
-	// might need a seed too?
 	#default = {
 		x: 48,
 		y: 48,
