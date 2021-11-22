@@ -73,7 +73,7 @@ export class UserSettings {
 
 	onEncodedSettingsChange(encodedSettings) {
 		// solves issue if unicode character is >1 code units 
-		if ([...encodedSettings].length != 6) {
+		if ([...encodedSettings].length != this.#state.settings.length) {
 			return;
 		}
 		const newState = this.#settingsEncoder.decode(encodedSettings);
