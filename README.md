@@ -1,6 +1,6 @@
 # Procedural Pokémon Buildings
 
-Procedurally generate Pokémon buildings based on rough rules influenced by the buildings from generation one (Red/Blue/Green/Yellow). 
+Procedurally generate Pokémon buildings based on rough rules influenced by the buildings from generation one (Red/Blue/Green/Yellow).
 
 ## Introduction
 After completing my [National Dex project](https://www.nikouusitalo.com/blog/making-a-living-dex-part-1-a-lifelong-dream/) I wanted to keep up a big Pokémon binge but I also wanted to time to do the following:
@@ -8,7 +8,7 @@ After completing my [National Dex project](https://www.nikouusitalo.com/blog/mak
 2. Create something vanilla with no faff
 3. Learn to use the HTML canvas properly*
 
-*It turns out the low level API the canvas provides isn't fun to work with and as such I picked up [Fabric.js](http://fabricjs.com/). 
+*It turns out the low level API the canvas provides isn't fun to work with and as such I picked up [Fabric.js](http://fabricjs.com/).
 For spending less time writing CSS I also opted for [FlexBoxGrid](http://flexboxgrid.com/).
 
 ## Features

@@ -60,7 +60,7 @@ export class UserSettings {
 		Object.keys(this.#state.settings).forEach((key) => {
 			if (this.#element[key] !== undefined){
 				this.#element[key].value = this.#state.settings[key];
-			}			
+			}
 		});
 
 		this.#setEncodedSettingsString();
@@ -72,7 +72,7 @@ export class UserSettings {
 	}
 
 	onEncodedSettingsChange(encodedSettings) {
-		// solves issue if unicode character is >1 code units 
+		// solves issue if unicode character is >1 code units
 		if ([...encodedSettings].length != this.#state.settings.length) {
 			return;
 		}

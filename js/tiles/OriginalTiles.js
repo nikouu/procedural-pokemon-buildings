@@ -16,19 +16,19 @@ export const OriginalTiles = {
 	SlantedRoof01 : {
 		x: 16,
 		y: 0,
-		spriteId: 2	
+		spriteId: 2
 	},
 
 	HorizontalRoof01 : {
 		x: 24,
 		y: 0,
-		spriteId: 3	
+		spriteId: 3
 	},
 
 	SlantedRoof02 : {
 		x: 32,
 		y: 0,
-		spriteId: 4	
+		spriteId: 4
 	},
 
 	SlantedRoof03 : {
@@ -120,7 +120,7 @@ export const OriginalTiles = {
 		y: 16,
 		spriteId: 19
 	},
-	
+
 	OuterBuilding01 : {
 		x: 32,
 		y: 16,
