@@ -392,32 +392,26 @@ export class BuildingGenerator {
 
 			const centreX = Math.round(this.#state.width / 2) - 1;
 
-			this.#writeToArrayIfPossible(centreX - 1, bottomOfRoof, cladding, true);
+			this.#writeToArrayIfPossible(centreX - 1, bottomOfRoof, 0, true);
 			this.#writeToArrayIfPossible(centreX, bottomOfRoof, "GymLeft", true);
 			this.#writeToArrayIfPossible(centreX + 1, bottomOfRoof, "GymRight", true);
-			this.#writeToArrayIfPossible(centreX + 2, bottomOfRoof, cladding, true);
+			this.#writeToArrayIfPossible(centreX + 2, bottomOfRoof, 0, true);
 
 		}
 
 		if (this.#state.decoration === Decoration.doubleGym) {
-			let cladding;
-			if (this.#state.cladding === Cladding.wood) {
-				cladding = "WoodCladding";
-			} else if (this.#state.cladding === Cladding.brick) {
-				cladding = "BrickCladding";
-			}
 
 			const centreX = Math.round(this.#state.width / 2) - 1;
 
-			this.#writeToArrayIfPossible(centreX - 3, bottomOfRoof, cladding, true);
+			this.#writeToArrayIfPossible(centreX - 3, bottomOfRoof, 0, true);
 			this.#writeToArrayIfPossible(centreX - 2, bottomOfRoof, "GymLeft", true);
 			this.#writeToArrayIfPossible(centreX - 1, bottomOfRoof, "GymRight", true);
-			this.#writeToArrayIfPossible(centreX, bottomOfRoof, cladding, true);
+			this.#writeToArrayIfPossible(centreX, bottomOfRoof, 0, true);
 
-			this.#writeToArrayIfPossible(centreX + 1, bottomOfRoof, cladding, true);
+			this.#writeToArrayIfPossible(centreX + 1, bottomOfRoof, 0, true);
 			this.#writeToArrayIfPossible(centreX + 2, bottomOfRoof, "GymLeft", true);
 			this.#writeToArrayIfPossible(centreX + 3, bottomOfRoof, "GymRight", true);
-			this.#writeToArrayIfPossible(centreX + 4, bottomOfRoof, cladding, true);
+			this.#writeToArrayIfPossible(centreX + 4, bottomOfRoof, 0, true);
 		}
 	}
 
