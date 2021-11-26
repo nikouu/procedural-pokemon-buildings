@@ -13,6 +13,9 @@ export class BuildingGenerator {
 		window.app.buildingGenerator = this;
 	}
 
+	// todo: perhaps write a small dictionary/lookup just for this to easily work out whether features exist and their coordinates
+	// rather than just using findIndex on the raw array to find bits and pieces.
+
 	// top left (0,0)
 	#tileArray = [[]]
 
@@ -272,6 +275,23 @@ export class BuildingGenerator {
 				this.#writeToArrayIfPossible(topRightDoorX + 2, this.#state.height - 2, "RegularWindow");
 			} else if (this.#state.door === Door.two) {
 
+				// todo: similar to below, fix this as its duplicated code that tries to work out doors
+				const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
+				if (topRightDoorX === -1) {
+					return;
+				}
+				// todo: perhaps refactor out key coordinates
+				const availableWidth = this.#state.width - 2; // we dont want to include the outside of the building as space to put a door
+				let firstTopLeftDoorX = Math.round(availableWidth * (1 / 3));
+				let secondTopLeftDoorX = Math.round(availableWidth * (2 / 3));
+
+
+				this.#writeToArrayIfPossible(firstTopLeftDoorX + 2, this.#state.height - 2, "RegularWindow");
+				this.#writeToArrayIfPossible(firstTopLeftDoorX + 3, this.#state.height - 2, "RegularWindow");
+
+				this.#writeToArrayIfPossible(secondTopLeftDoorX + 2, this.#state.height - 2, "RegularWindow");
+				this.#writeToArrayIfPossible(secondTopLeftDoorX + 3, this.#state.height - 2, "RegularWindow");
+
 			}
 		}
 	}
@@ -296,8 +316,22 @@ export class BuildingGenerator {
 
 		// the special two door case
 		if (this.#state.door === Door.two) {
+			if (this.#state.width < 8) {
+				return; // too small for a door. Technically, they could fit, I don't want to write the edge case code for it and no two door original building is that small
+			}
+			const availableWidth = this.#state.width - 2; // we dont want to include the outside of the building as space to put a door
+			let firstTopLeftDoorX = Math.round(availableWidth * (1 / 3));
+			let secondTopLeftDoorX = Math.round(availableWidth * (2 / 3));
 
-			return;
+			this.#writeToArrayIfPossible(firstTopLeftDoorX, this.#state.height - 2, "Door00");
+			this.#writeToArrayIfPossible(firstTopLeftDoorX + 1, this.#state.height - 2, "Door01");
+			this.#writeToArrayIfPossible(firstTopLeftDoorX, this.#state.height - 1, "Door02");
+			this.#writeToArrayIfPossible(firstTopLeftDoorX + 1, this.#state.height - 1, "Door03");
+
+			this.#writeToArrayIfPossible(secondTopLeftDoorX, this.#state.height - 2, "Door00");
+			this.#writeToArrayIfPossible(secondTopLeftDoorX + 1, this.#state.height - 2, "Door01");
+			this.#writeToArrayIfPossible(secondTopLeftDoorX, this.#state.height - 1, "Door02");
+			this.#writeToArrayIfPossible(secondTopLeftDoorX + 1, this.#state.height - 1, "Door03");
 		}
 
 		if (this.#state.door === Door.one) {
@@ -351,15 +385,38 @@ export class BuildingGenerator {
 
 		const signXValue = Math.round((this.#state.width - 2) * (1 / 2));
 		if (this.#state.decoration === Decoration.pokemonCenter) {
-			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
 
-			// dont put a sign down if it goes over the door. terrible check. todo: fix
-			if (topRightDoorX === signXValue + 1
-				|| topRightDoorX === signXValue + 2
-				|| topRightDoorX - 1 === signXValue + 1
-				|| topRightDoorX - 1 === signXValue + 2) {
-				return;
+			if (this.#state.door === Door.one) {
+				const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
+
+				// dont put a sign down if it goes over the door. terrible check. todo: fix
+				if (topRightDoorX === signXValue + 1
+					|| topRightDoorX === signXValue + 2
+					|| topRightDoorX - 1 === signXValue + 1
+					|| topRightDoorX - 1 === signXValue + 2) {
+					return;
+				}
+
+			} else if (this.#state.door === Door.two) {
+				const availableWidth = this.#state.width - 2; // we dont want to include the outside of the building as space to put a door
+				let firstTopLeftDoorX = Math.round(availableWidth * (1 / 3));
+				let secondTopLeftDoorX = Math.round(availableWidth * (2 / 3));
+
+				// dont put a sign down if it goes over the door. terrible check. todo: fix, super fix, NASTY
+				if (firstTopLeftDoorX === signXValue + 1
+					|| firstTopLeftDoorX === signXValue + 2
+					|| firstTopLeftDoorX - 1 === signXValue + 1
+					|| firstTopLeftDoorX - 1 === signXValue + 2) {
+					return;
+				} else if (secondTopLeftDoorX === signXValue + 1
+					|| secondTopLeftDoorX === signXValue + 2
+					|| secondTopLeftDoorX - 1 === signXValue + 1
+					|| secondTopLeftDoorX - 1 === signXValue + 2) {
+					return;
+				}
+
 			}
+
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 2, "PokemonCenterLeft");
 			this.#writeToArrayIfPossible(signXValue + 2, this.#state.height - 2, "PokemonCenterRight");
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 1, "DecorationSignBase", true);
@@ -367,13 +424,35 @@ export class BuildingGenerator {
 		}
 
 		if (this.#state.decoration === Decoration.pokemart) {
-			const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
-			// dont put a sign down if it goes over the door. terrible check. todo: fix
-			if (topRightDoorX === signXValue + 1
-				|| topRightDoorX === signXValue + 2
-				|| topRightDoorX - 1 === signXValue + 1
-				|| topRightDoorX - 1 === signXValue + 2) {
-				return;
+			if (this.#state.door === Door.one) {
+				const topRightDoorX = this.#tileArray.findIndex(row => row.includes("Door03"));
+
+				// dont put a sign down if it goes over the door. terrible check. todo: fix
+				if (topRightDoorX === signXValue + 1
+					|| topRightDoorX === signXValue + 2
+					|| topRightDoorX - 1 === signXValue + 1
+					|| topRightDoorX - 1 === signXValue + 2) {
+					return;
+				}
+
+			} else if (this.#state.door === Door.two) {
+				const availableWidth = this.#state.width - 2; // we dont want to include the outside of the building as space to put a door
+				let firstTopLeftDoorX = Math.round(availableWidth * (1 / 3));
+				let secondTopLeftDoorX = Math.round(availableWidth * (2 / 3));
+
+				// dont put a sign down if it goes over the door. terrible check. todo: fix, super fix, NASTY
+				if (firstTopLeftDoorX === signXValue + 1
+					|| firstTopLeftDoorX === signXValue + 2
+					|| firstTopLeftDoorX - 1 === signXValue + 1
+					|| firstTopLeftDoorX - 1 === signXValue + 2) {
+					return;
+				} else if (secondTopLeftDoorX === signXValue + 1
+					|| secondTopLeftDoorX === signXValue + 2
+					|| secondTopLeftDoorX - 1 === signXValue + 1
+					|| secondTopLeftDoorX - 1 === signXValue + 2) {
+					return;
+				}
+
 			}
 			this.#writeToArrayIfPossible(signXValue + 1, this.#state.height - 2, "PokeMartLeft");
 			this.#writeToArrayIfPossible(signXValue + 2, this.#state.height - 2, "PokeMartRight");
