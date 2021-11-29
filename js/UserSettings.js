@@ -50,6 +50,12 @@ export class UserSettings {
 		this.#element.randomButton.addEventListener('click', (event) => {
 			this.setRandomState();
 		});
+
+		this.#element.copyButton.addEventListener("click", () => {
+			// todo: encoded settings probably should be some of the state of the usersettings object
+			const encodedSettings = document.getElementById("buildingCode").value;
+			navigator.clipboard.writeText(encodedSettings);
+		});
 	}
 
 	onStateChange(key, state) {
@@ -58,7 +64,7 @@ export class UserSettings {
 
 	setSettingsUI() {
 		Object.keys(this.#state.settings).forEach((key) => {
-			if (this.#element[key] !== undefined){
+			if (this.#element[key] !== undefined) {
 				this.#element[key].value = this.#state.settings[key];
 			}
 		});
@@ -73,7 +79,7 @@ export class UserSettings {
 
 	onEncodedSettingsChange(encodedSettings) {
 		// solves issue if unicode character is >1 code units
-		if ([...encodedSettings].length != this.#state.settings.length) {
+		if ([...encodedSettings].length != 6) {
 			return;
 		}
 		const newState = this.#settingsEncoder.decode(encodedSettings);
