@@ -20,7 +20,7 @@ export class BuildingState {
 
 				state[key] = newValue;
 
-				// notify subscrubers
+				// notify subscribers
 				self.#subscribers.forEach(callback => callback(key, state, oldState));
 				return state;
 			}
@@ -50,14 +50,4 @@ export class BuildingState {
 
 	// properly name options/settings to the right thing across the code
 	#settings = {}
-
-
-	getState() {
-		return JSON.parse(JSON.stringify(this.#settings));
-	}
-
-	setState(settings = {}) {
-		this.#settings = Object.assign(this.#default, settings);
-
-	}
 }

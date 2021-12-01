@@ -21,10 +21,6 @@ export class BuildingGenerator {
 
 	#state = {}
 
-	getState() {
-		return this.#state;
-	}
-
 	setState(state) {
 		this.#state = state;
 	}

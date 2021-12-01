@@ -38,9 +38,12 @@ export class Canvas {
 
 		const largestDimension = document.getElementById("canvasCol").clientWidth > document.getElementById("canvasCol").clientHeight ?
 			document.getElementById("canvasCol").clientWidth : document.getElementById("canvasCol").clientHeight
+
+		// fixed weird sizing resolution bug by doing it here and not in the constructor
 		this.fabricCanvas.setWidth(largestDimension);
 		this.fabricCanvas.setHeight(largestDimension);
-		this.fabricCanvas.requestRenderAll();
+
+		this.fabricCanvas.renderAll();
 
 		this.#setupGrid();
 		this.#setupSelectorRectangle();
