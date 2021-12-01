@@ -1,7 +1,7 @@
 /* https://www.fontspace.com/pokemon-gb-font-f9621 */
 @font-face {
     font-family: "Pokemon GB";
-    src: url("/assets/PokemonGb-RAeo.ttf");
+    src: url("../assets/PokemonGb-RAeo.ttf");
 }
 
 .pokemon-font {
@@ -94,7 +94,7 @@ label {
 }
 
 .background-grass {
-    background-image: url(/assets/background.png);
+    background-image: url(../assets/background.png);
 }
 
 #canvasCol {
