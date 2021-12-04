@@ -118,7 +118,7 @@ export class Canvas {
 			height: this.gridSize,
 			scaleX: this.#state.settings.width,
 			scaleY: this.#state.settings.height,
-			fill: 'rgba(120,5,5,0.2)',
+			fill: 'rgba(120,5,5,0.0)',
 			originX: 'left',
 			originY: 'top',
 			name: 'selectionRect'
