@@ -36,12 +36,15 @@ export class Canvas {
 			}
 		);
 
-		const largestDimension = document.getElementById("canvasCol").clientWidth > document.getElementById("canvasCol").clientHeight ?
-			document.getElementById("canvasCol").clientWidth : document.getElementById("canvasCol").clientHeight
+		const squareCanvasDimension = document.getElementById("canvasCol").clientWidth;
 
 		// fixed weird sizing resolution bug by doing it here and not in the constructor
-		this.fabricCanvas.setWidth(largestDimension);
-		this.fabricCanvas.setHeight(largestDimension);
+		this.fabricCanvas.setWidth(squareCanvasDimension);
+		this.fabricCanvas.setHeight(squareCanvasDimension);
+
+		if (squareCanvasDimension < 800) {
+			this.#setZoom(1, 1, squareCanvasDimension / 800);
+		}
 
 		this.fabricCanvas.renderAll();
 
@@ -303,9 +306,9 @@ export class Canvas {
 		const delta = event.e.deltaY;
 		let zoom = this.fabricCanvas.getZoom();
 		zoom *= 0.999 ** delta;
-		if (zoom > 20) zoom = 20;
-		if (zoom < 0.01) zoom = 0.01;
-		this.fabricCanvas.zoomToPoint({ x: event.e.offsetX, y: event.e.offsetY }, zoom);
+
+		this.#setZoom(event.e.offsetX, event.e.offsetY, zoom);
+
 		event.e.preventDefault();
 		event.e.stopPropagation();
 	}
@@ -325,6 +328,16 @@ export class Canvas {
 
 			this.touch = event.e.touches[0];
 		}
+	}
+
+	#setZoom(x, y, zoom) {
+		if (zoom > 20) {
+			zoom = 20;
+		}
+		if (zoom < 0.01) {
+			zoom = 0.01;
+		}
+		this.fabricCanvas.zoomToPoint({ x: x, y: y }, zoom);
 	}
 
 	#placeTiles(attrs, generatedBuilding, scaledObject) {
