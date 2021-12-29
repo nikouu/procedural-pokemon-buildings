@@ -157,6 +157,7 @@ export class Canvas {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
 
+					console.log(`${e.self.state} ${this.zoomStartScale}`)
 					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					e.e.preventDefault();
 					e.e.stopPropagation();
