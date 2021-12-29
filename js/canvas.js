@@ -158,7 +158,12 @@ export class Canvas {
 					}
 
 					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
-					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
+
+					// issue where scale will jump to 1 then back to the real value
+					if (e.self.scale != 1) {
+						this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
+					}
+
 					e.e.preventDefault();
 					e.e.stopPropagation();
 				}
