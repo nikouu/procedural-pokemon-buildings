@@ -150,13 +150,13 @@ export class Canvas {
 			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
-			'touch:gesture': (e) => {
-				e.e.preventDefault();
-				return;
-			},
-			'touch:orientation': (e) => {
-				console.log(e);
-			}
+			// 'touch:gesture': (e) => {
+			// 	e.e.preventDefault();
+			// 	return;
+			// },
+			// 'touch:orientation': (e) => {
+			// 	console.log(e);
+			// }
 		});
 	}
 
