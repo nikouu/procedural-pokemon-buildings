@@ -148,7 +148,8 @@ export class Canvas {
 			'mouse:wheel': this.#onZooming.bind(this),
 			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
 			'mouse:down': () => { this.isPanning = true; },
-			'mouse:move': this.#onMouseMoving.bind(this)
+			'mouse:move': this.#onMouseMoving.bind(this),
+			'touch:gesture': (e) => { console.log(e) }
 		});
 	}
 
