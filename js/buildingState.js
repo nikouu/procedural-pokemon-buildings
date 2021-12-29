@@ -18,7 +18,7 @@ export class BuildingState {
 				const oldState = { ...state };
 				const newValue = value === 'true' || (value === 'false' ? false : value);	//cleans up truthy true/false
 
-				// if that particular state property hasn't changed
+				// prevent callbacks if the state is the same value
 				if (state[key] == newValue) {
 					return state;
 				}

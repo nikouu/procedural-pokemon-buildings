@@ -298,11 +298,6 @@ export class Canvas {
 			this.currentYScale = attrs.scaleY;
 		}
 
-		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
-
-		// clear existing tiles
-		this.fabricCanvas.remove(...objectsToRemove);
-
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
 
