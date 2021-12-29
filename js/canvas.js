@@ -158,14 +158,16 @@ export class Canvas {
 				}
 
 				if (e.e.touches && e.e.touches.length == 2 && !this.isResizing) {
+					let isInitialRun = false;
 					if (e.self.state == "start") {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
+						isInitialRun = true;
 					}
 
 					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
 
 					// issue where scale will jump to 1 then back to the real value
-					if (e.self.scale != 1) {
+					if (isInitialRun || e.self.scale != 1) {
 						this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					}
 
