@@ -165,7 +165,7 @@ export class Canvas {
 					//this.#onZooming(e);
 
 					if (e.self.state == "start") {
-						this.zoomStartScale = canvas.getZoom();
+						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
 
 					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
