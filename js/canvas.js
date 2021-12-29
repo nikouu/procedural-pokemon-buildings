@@ -152,7 +152,7 @@ export class Canvas {
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:gesture': (e) => {
-				if (e.e.touches && e.e.touches.length == 2) {
+				if (e.e.touches && e.e.touches.length == 2 && e.target.name != "selectionRect") {
 					if (e.self.state == "start") {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
