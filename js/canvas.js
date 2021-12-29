@@ -152,19 +152,17 @@ export class Canvas {
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:gesture': (e) => {
-				if (e.e.touches && e.e.touches.length == 2) {
+				if (e.e.touches && e.e.touches.length == 2 && e.target?.name != "selectionRect") {
 					if (e.self.state == "start") {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
 
+					console.log(`${e.self.state} ${this.zoomStartScale}`)
 					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					e.e.preventDefault();
 					e.e.stopPropagation();
 				}
 			}
-			// 'touch:orientation': (e) => {
-			// 	console.log(e);
-			// }
 		});
 	}
 
@@ -264,22 +262,21 @@ export class Canvas {
 				if (dist.height < this.gridSize) {
 					attrs.scaleY = snap.height / scaledObject.height;
 				}
-
 				break;
 			case 'mt':
 			case 'mb':
 				if (dist.height < this.gridSize) {
 					attrs.scaleY = snap.height / scaledObject.height;
 				}
-
 				break;
 			case 'ml':
 			case 'mr':
 				if (dist.width < this.gridSize) {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
-
 				break;
+			case false:
+				return;
 		}
 
 		let updateScale = true;
@@ -302,11 +299,6 @@ export class Canvas {
 			this.currentXScale = attrs.scaleX;
 			this.currentYScale = attrs.scaleY;
 		}
-
-		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
-
-		// clear existing tiles
-		this.fabricCanvas.remove(...objectsToRemove);
 
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
