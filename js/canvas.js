@@ -121,6 +121,7 @@ export class Canvas {
 			height: this.gridSize,
 			scaleX: this.#state.settings.width,
 			scaleY: this.#state.settings.height,
+			lockRotation: true,
 			fill: 'rgba(120,5,5,0.0)',
 			originX: 'left',
 			originY: 'top',
