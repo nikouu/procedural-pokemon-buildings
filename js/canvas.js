@@ -205,12 +205,6 @@ export class Canvas {
 	}
 
 	#onScaling(event) {
-		// if rotating, don't do anything
-		if (event.transform.signX !== event.transform.signY) {
-			event.preventDefault();
-			return;
-		}
-
 		const {
 			transform
 		} = event;
