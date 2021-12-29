@@ -154,6 +154,7 @@ export class Canvas {
 				if (e.e.touches && e.e.touches.length == 2) {
 					this.isPanning = true;
 					var point = new fabric.Point(e.self.x, e.self.y);
+					let zoomStartScale;
 					if (e.self.state == "start") {
 						zoomStartScale = this.fabricCanvas.getZoom();
 					}
