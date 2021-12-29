@@ -150,6 +150,10 @@ export class Canvas {
 			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
+			'touch:drag': (e) => {
+				e.e.preventDefault();
+				return;
+			}
 			// 'touch:gesture': (e) => {
 			// 	e.e.preventDefault();
 			// 	return;
