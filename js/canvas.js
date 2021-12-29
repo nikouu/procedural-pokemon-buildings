@@ -152,6 +152,9 @@ export class Canvas {
 			'touch:gesture': (e) => {
 				e.e.preventDefault();
 				return;
+			},
+			'touch:orientation': (e) => {
+				console.log(e);
 			}
 		});
 	}
