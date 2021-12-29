@@ -162,7 +162,7 @@ export class Canvas {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
 
-					console.log(`Zooming canvas`)
+					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
 
 					// issue where scale will jump to 1 then back to the real value
 					if (e.self.scale != 1) {
