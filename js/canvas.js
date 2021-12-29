@@ -152,15 +152,16 @@ export class Canvas {
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:gesture': (e) => {
 				if (e.e.touches && e.e.touches.length == 2) {
-					this.isPanning = true;
-					var point = new fabric.Point(e.self.x, e.self.y);
-					let zoomStartScale;
-					if (e.self.state == "start") {
-						zoomStartScale = this.fabricCanvas.getZoom();
-					}
-					var delta = zoomStartScale * e.self.scale;
-					this.fabricCanvas.zoomToPoint(point, delta);
-					this.isPanning = false;
+					// this.isPanning = true;
+					// var point = new fabric.Point(e.self.x, e.self.y);
+					// let zoomStartScale;
+					// if (e.self.state == "start") {
+					// 	zoomStartScale = this.fabricCanvas.getZoom();
+					// }
+					// var delta = zoomStartScale * e.self.scale;
+					// this.fabricCanvas.zoomToPoint(point, delta);
+					// this.isPanning = false;
+					this.#onZooming(e.e);
 				}
 			},
 			'object:selected': function () {
