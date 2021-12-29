@@ -18,6 +18,10 @@ export class BuildingState {
 				const oldState = { ...state };
 				const newValue = value === 'true' || (value === 'false' ? false : value);	//cleans up truthy true/false
 
+				// if that particular state hasn't changed
+				if (state[key] == newValue) {
+					return;
+				}
 				state[key] = newValue;
 
 				// notify subscribers
