@@ -164,12 +164,6 @@ export class Canvas {
 	}
 
 	#onMoving(event) {
-		// if rotating, don't do anything
-		if (event.transform.signX !== event.transform.signY) {
-			event.preventDefault();
-			return;
-		}
-
 		let snap = {
 			// closest width to snap to
 			left: this.#snap(event.target.left),
@@ -210,6 +204,12 @@ export class Canvas {
 	}
 
 	#onScaling(event) {
+		// if rotating, don't do anything
+		if (event.transform.signX !== event.transform.signY) {
+			event.preventDefault();
+			return;
+		}
+
 		const {
 			transform
 		} = event;
