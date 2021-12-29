@@ -22,6 +22,7 @@ export class Canvas {
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.isPanning = false;
+		this.isResizing = false;
 		this.touchCoords;
 		this.zoomStartScale;
 
@@ -148,23 +149,34 @@ export class Canvas {
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
 			'mouse:wheel': this.#onZooming.bind(this),
-			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
+			'mouse:up': () => { this.isPanning = false; this.touch = undefined; this.isResizing = false },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:gesture': (e) => {
-				if (e.e.touches && e.e.touches.length == 2) {
+				if (e.target?.name == "selectionRect") {
+					this.isResizing = true;
+				}
+
+				if (e.e.touches && e.e.touches.length == 2 && !this.isResizing) {
+					let isInitialRun = false;
 					if (e.self.state == "start") {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
+						isInitialRun = true;
 					}
 
-					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
+					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
+
+					// issue where scale will jump to 1 then back to the real value
+					if (isInitialRun || e.self.scale != 1) {
+						this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
+					}
+
 					e.e.preventDefault();
 					e.e.stopPropagation();
+				} else {
+					console.log("everything else")
 				}
 			}
-			// 'touch:orientation': (e) => {
-			// 	console.log(e);
-			// }
 		});
 	}
 
@@ -257,6 +269,7 @@ export class Canvas {
 			case 'br':
 			case 'tr':
 			case 'bl':
+			case false:
 				if (dist.width < this.gridSize) {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
@@ -264,21 +277,18 @@ export class Canvas {
 				if (dist.height < this.gridSize) {
 					attrs.scaleY = snap.height / scaledObject.height;
 				}
-
 				break;
 			case 'mt':
 			case 'mb':
 				if (dist.height < this.gridSize) {
 					attrs.scaleY = snap.height / scaledObject.height;
 				}
-
 				break;
 			case 'ml':
 			case 'mr':
 				if (dist.width < this.gridSize) {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
-
 				break;
 		}
 
@@ -302,11 +312,6 @@ export class Canvas {
 			this.currentXScale = attrs.scaleX;
 			this.currentYScale = attrs.scaleY;
 		}
-
-		let objectsToRemove = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'buildingTile');
-
-		// clear existing tiles
-		this.fabricCanvas.remove(...objectsToRemove);
 
 		// correctly sets the values of the new selection shape size for the delta calculations in the movement
 		this.selectionCoords = new fabric.Point(this.#snap(scaledObject.left), this.#snap(scaledObject.top));
