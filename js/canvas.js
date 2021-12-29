@@ -164,6 +164,8 @@ export class Canvas {
 					//this.#onZooming(e);
 
 					this.#setZoom(e.self.x, e.self.y, this.fabricCanvas.getZoom() * e.self.scale);
+					e.e.preventDefault();
+					e.e.stopPropagation();
 				}
 			},
 			'object:selected': function () {
