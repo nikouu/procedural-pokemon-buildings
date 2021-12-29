@@ -162,9 +162,6 @@ export class Canvas {
 					e.e.stopPropagation();
 				}
 			}
-			// 'touch:orientation': (e) => {
-			// 	console.log(e);
-			// }
 		});
 	}
 
@@ -257,6 +254,7 @@ export class Canvas {
 			case 'br':
 			case 'tr':
 			case 'bl':
+			case false:
 				if (dist.width < this.gridSize) {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
@@ -264,21 +262,18 @@ export class Canvas {
 				if (dist.height < this.gridSize) {
 					attrs.scaleY = snap.height / scaledObject.height;
 				}
-
 				break;
 			case 'mt':
 			case 'mb':
 				if (dist.height < this.gridSize) {
 					attrs.scaleY = snap.height / scaledObject.height;
 				}
-
 				break;
 			case 'ml':
 			case 'mr':
 				if (dist.width < this.gridSize) {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
-
 				break;
 		}
 
