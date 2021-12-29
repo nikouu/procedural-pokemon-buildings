@@ -22,6 +22,7 @@ export class Canvas {
 		// x,y of the selection rectangle, kept to help calculate deltas for before and after events
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.isPanning = false;
+		this.isResizing = false;
 		this.touchCoords;
 		this.zoomStartScale;
 
@@ -148,16 +149,20 @@ export class Canvas {
 			"object:moving": this.#onMoving.bind(this),
 			"object:scaling": this.#onScaling.bind(this),
 			'mouse:wheel': this.#onZooming.bind(this),
-			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
+			'mouse:up': () => { this.isPanning = false; this.touch = undefined; this.isResizing = false },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:gesture': (e) => {
-				if (e.e.touches && e.e.touches.length == 2 && e.target?.name != "selectionRect") {
+				if (e.target?.name == "selectionRect") {
+					this.isResizing = true;
+				}
+
+				if (e.e.touches && e.e.touches.length == 2 && !this.isResizing) {
 					if (e.self.state == "start") {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
 
-					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
+					console.log(`Zooming canvas`)
 
 					// issue where scale will jump to 1 then back to the real value
 					if (e.self.scale != 1) {
@@ -166,6 +171,8 @@ export class Canvas {
 
 					e.e.preventDefault();
 					e.e.stopPropagation();
+				} else {
+					console.log("everything else")
 				}
 			}
 		});
