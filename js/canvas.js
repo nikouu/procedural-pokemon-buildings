@@ -23,6 +23,7 @@ export class Canvas {
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.isPanning = false;
 		this.isResizing = false;
+		this.previousTouchZoomScale = 1;
 		this.touchCoords;
 		this.zoomStartScale;
 
@@ -167,12 +168,14 @@ export class Canvas {
 					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
 
 					// issue where scale will jump to 1 then back to the real value
-					if (isInitialRun || e.self.scale != 1) {
+					if (isInitialRun || Math.abs(e.self.scale - this.previousTouchZoomScale) > 0.2) {
 						this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					}
 
 					e.e.preventDefault();
 					e.e.stopPropagation();
+
+					this.previousTouchZoomScale = e.self.scale;
 				} else {
 					console.log("everything else")
 				}
