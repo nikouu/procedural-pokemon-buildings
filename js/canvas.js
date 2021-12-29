@@ -152,7 +152,7 @@ export class Canvas {
 			'touch:gesture': (e) => {
 				console.log(e);
 				if (e.e.type == "touchmove") {
-					e.preventDefault();
+					e.e.preventDefault();
 					return;
 				}
 			}
