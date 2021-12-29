@@ -269,7 +269,6 @@ export class Canvas {
 			case 'br':
 			case 'tr':
 			case 'bl':
-			case false:
 				if (dist.width < this.gridSize) {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
@@ -290,6 +289,10 @@ export class Canvas {
 					attrs.scaleX = snap.width / scaledObject.width;
 				}
 				break;
+			case false:
+				// difficult to get pinch for resizing working
+				// transform.corner = false when gesture resizing
+				return;
 		}
 
 		let updateScale = true;
