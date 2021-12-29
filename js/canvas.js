@@ -154,11 +154,25 @@ export class Canvas {
 				console.log(e);
 				e?.e?.preventDefault();
 				return;
-			}
-			// 'touch:gesture': (e) => {
-			// 	e.e.preventDefault();
-			// 	return;
-			// },
+			},
+			'touch:gesture': (e) => {
+				if (e.e.touches && e.e.touches.length == 2) {
+					this.isPanning = true;
+					var point = new fabric.Point(e.self.x, e.self.y);
+					if (e.self.state == "start") {
+						zoomStartScale = canvas.getZoom();
+					}
+					var delta = zoomStartScale * e.self.scale;
+					canvas.zoomToPoint(point, delta);
+					this.isPanning = false;
+				}
+			},
+			'object:selected': function () {
+				this.isPanning = true;
+			},
+			'selection:cleared': function () {
+				this.isPanning = false;
+			},
 			// 'touch:orientation': (e) => {
 			// 	console.log(e);
 			// }
