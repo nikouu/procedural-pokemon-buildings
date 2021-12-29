@@ -151,6 +151,7 @@ export class Canvas {
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:drag': (e) => {
+				console.log(e);
 				e?.e?.preventDefault();
 				return;
 			}
