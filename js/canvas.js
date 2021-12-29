@@ -164,6 +164,11 @@ export class Canvas {
 	}
 
 	#onMoving(event) {
+		// if rotating, don't do anything
+		if (event.transform.signX !== event.transform.signY) {
+			event.preventDefault();
+			return;
+		}
 
 		let snap = {
 			// closest width to snap to
