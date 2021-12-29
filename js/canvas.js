@@ -150,20 +150,15 @@ export class Canvas {
 			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
-			'touch:drag': (e) => {
-				console.log(e);
-				e?.e?.preventDefault();
-				return;
-			},
 			'touch:gesture': (e) => {
 				if (e.e.touches && e.e.touches.length == 2) {
 					this.isPanning = true;
 					var point = new fabric.Point(e.self.x, e.self.y);
 					if (e.self.state == "start") {
-						zoomStartScale = canvas.getZoom();
+						zoomStartScale = this.fabricCanvas.getZoom();
 					}
 					var delta = zoomStartScale * e.self.scale;
-					canvas.zoomToPoint(point, delta);
+					this.fabricCanvas.zoomToPoint(point, delta);
 					this.isPanning = false;
 				}
 			},
