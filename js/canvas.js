@@ -151,7 +151,7 @@ export class Canvas {
 			'mouse:move': this.#onMouseMoving.bind(this),
 			'touch:gesture': (e) => {
 				console.log(e);
-				if (e.e.type = "touchmove") {
+				if (e.e.type == "touchmove") {
 					e.preventDefault();
 					return;
 				}
