@@ -23,6 +23,7 @@ export class Canvas {
 		this.selectionCoords = new fabric.Point(this.gridSize * 2, this.gridSize * 2);
 		this.isPanning = false;
 		this.touchCoords;
+		this.zoomStartScale;
 
 		// move these to a new object
 		this.currentXScale = 1;
@@ -163,17 +164,15 @@ export class Canvas {
 					// this.isPanning = false;
 					//this.#onZooming(e);
 
-					this.#setZoom(e.self.x, e.self.y, this.fabricCanvas.getZoom() * e.self.scale);
+					if (e.self.state == "start") {
+						this.zoomStartScale = canvas.getZoom();
+					}
+
+					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					e.e.preventDefault();
 					e.e.stopPropagation();
 				}
-			},
-			'object:selected': function () {
-				this.isPanning = true;
-			},
-			'selection:cleared': function () {
-				this.isPanning = false;
-			},
+			}
 			// 'touch:orientation': (e) => {
 			// 	console.log(e);
 			// }
