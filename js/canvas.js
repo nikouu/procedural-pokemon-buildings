@@ -168,7 +168,7 @@ export class Canvas {
 					console.log(`${e.self.state} ${this.zoomStartScale} ${e.self.scale}`)
 
 					// issue where scale will jump to 1 then back to the real value
-					if (isInitialRun || Math.abs(e.self.scale - this.previousTouchZoomScale) > 0.2) {
+					if (isInitialRun || Math.abs(e.self.scale - this.previousTouchZoomScale) < 0.2) {
 						this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					}
 
