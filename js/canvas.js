@@ -161,7 +161,9 @@ export class Canvas {
 					// var delta = zoomStartScale * e.self.scale;
 					// this.fabricCanvas.zoomToPoint(point, delta);
 					// this.isPanning = false;
-					this.#onZooming(e);
+					//this.#onZooming(e);
+
+					this.#setZoom(e.self.x, e.self.y, this.fabricCanvas.getZoom() * e.self.scale);
 				}
 			},
 			'object:selected': function () {
