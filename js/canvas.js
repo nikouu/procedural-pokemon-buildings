@@ -157,6 +157,10 @@ export class Canvas {
 						this.zoomStartScale = this.fabricCanvas.getZoom();
 					}
 
+					if (isNaN(this.zoomStartScale)) {
+						return;
+					}
+
 					console.log(`${e.self.state} ${this.zoomStartScale}`)
 					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
 					e.e.preventDefault();

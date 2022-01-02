@@ -15994,7 +15994,9 @@ fabric.util.object.extend(fabric.StaticCanvas.prototype, /** @lends fabric.Stati
       t.action = 'scale';
       t.originX = t.originY = 'center';
 
-      this._scaleObjectBy(self.scale, e);
+      // NOTE: commented this out as I do not need scale and it's the best I could work out in the time I dedicated to it
+      // as it doens't respect lockRotation nor can I seem to cancel the event
+      //this._scaleObjectBy(self.scale, e);
 
       if (self.rotation !== 0) {
         t.action = 'rotate';
