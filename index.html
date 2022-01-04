@@ -44,7 +44,7 @@
             <img src="assets/loading.gif" style="opacity: 1;" />
         </div>
 
-        <div class="col-xs background-grass">
+        <div class="col-xs">
             <div id="canvasCol">
                 <canvas id="canvas"></canvas>
             </div>
@@ -205,7 +205,16 @@
         Some features may not show/work for various reasons. For example:
         <ul>
             <li>
-                Pinch to resize doesn't work.
+                Pinch to resize doesn't work. You have to use the handles.
+            </li>
+            <li>
+                The code isn't properly validated. I.E. an invalid building placement could be thrown in.
+            </li>
+            <li>
+                The pinch to zoom for the canvas is a bit jank.
+            </li>
+            <li>
+                Pasting in a code for a building different to the current size doesn't update the selection square.
             </li>
             <li>
                 The double gym signs don't show if the building is too narrow.

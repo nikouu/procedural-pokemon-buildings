@@ -33,9 +33,16 @@ export class Canvas {
 			{
 				preserveObjectStacking: true,
 				selection: false,
-				backgroundColor: '#919191'
+				//backgroundColor: '#919191'
+				backgroundColor: '#FFF'
 			}
 		);
+
+		fabric.Object.prototype.set({
+			transparentCorners: false,
+			borderColor: '#ff00ff',
+			cornerColor: '#ff0000'
+		});
 
 		const squareCanvasDimension = document.getElementById("canvasCol").clientWidth;
 
@@ -83,7 +90,7 @@ export class Canvas {
 			const verticalEndCoords = [i * this.gridSize, this.maxHeightInCells * this.gridSize - this.gridSize];
 
 			let verticalLine = new fabric.Line(verticalStartCoords.concat(verticalEndCoords), {
-				stroke: '#fff',
+				stroke: '#979797',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
@@ -100,7 +107,7 @@ export class Canvas {
 			const horizontalEndCoords = [this.maxWidthInCells * this.gridSize - this.gridSize, i * this.gridSize]
 
 			let horizontalLine = new fabric.Line(horizontalStartCoords.concat(horizontalEndCoords), {
-				stroke: '#fff',
+				stroke: '#979797',
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
@@ -345,8 +352,8 @@ export class Canvas {
 		if (zoom > 1.5) {
 			zoom = 1.5;
 		}
-		if (zoom < 0.1) {
-			zoom = 0.1;
+		if (zoom < 0.4) {
+			zoom = 0.4;
 		}
 		this.fabricCanvas.zoomToPoint({ x: x, y: y }, zoom);
 	}
