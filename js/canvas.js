@@ -38,6 +38,10 @@ export class Canvas {
 			}
 		);
 
+		this.fabricCanvas.setBackgroundColor({source: 'assets/background2.png', repeat: 'repeat'}, function () {
+			canvas.renderAll();
+		  });
+
 		fabric.Object.prototype.set({
 			transparentCorners: false,
 			borderColor: '#ff00ff',
@@ -83,6 +87,7 @@ export class Canvas {
 	}
 
 	#setupGrid() {
+		const gridColour = '#dedede';
 		for (let i = 0; i < this.maxWidthInCells; i++) {
 			// offset is to trim the offcuts over the sides because the canvas dimensions might not align fully with the grid proportions
 			// the -this.gridSize is such that the bottom right corner is covered
@@ -90,7 +95,7 @@ export class Canvas {
 			const verticalEndCoords = [i * this.gridSize, this.maxHeightInCells * this.gridSize - this.gridSize];
 
 			let verticalLine = new fabric.Line(verticalStartCoords.concat(verticalEndCoords), {
-				stroke: '#979797',
+				stroke: gridColour,
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
@@ -107,7 +112,7 @@ export class Canvas {
 			const horizontalEndCoords = [this.maxWidthInCells * this.gridSize - this.gridSize, i * this.gridSize]
 
 			let horizontalLine = new fabric.Line(horizontalStartCoords.concat(horizontalEndCoords), {
-				stroke: '#979797',
+				stroke: gridColour,
 				selectable: false,
 				name: 'grid',
 				hoverCursor: 'default'
