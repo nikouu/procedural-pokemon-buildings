@@ -400,6 +400,11 @@ export class Canvas {
 		}
 		// hacky workaround to get the selection bit back on top, probably needs fixing
 		const selectionRectangle = this.fabricCanvas.getObjects().filter(e => e.get("name") === 'selectionRect')[0];
+
+		// scales the selection rectangle correctly after a code has been entered
+		selectionRectangle.scaleX = attrs.scaleX;
+		selectionRectangle.scaleY = attrs.scaleY;
+
 		this.fabricCanvas.bringToFront(selectionRectangle);
 	}
 
