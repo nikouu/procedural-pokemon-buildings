@@ -33,14 +33,11 @@ export class Canvas {
 			{
 				preserveObjectStacking: true,
 				selection: false,
-				//backgroundColor: '#919191'
 				backgroundColor: '#FFF'
 			}
 		);
 
-		this.fabricCanvas.setBackgroundColor({source: 'assets/background2.png', repeat: 'repeat'}, function () {
-			canvas.renderAll();
-		  });
+		this.fabricCanvas.setBackgroundColor({source: 'assets/background2.png', repeat: 'repeat'});
 
 		fabric.Object.prototype.set({
 			transparentCorners: false,
