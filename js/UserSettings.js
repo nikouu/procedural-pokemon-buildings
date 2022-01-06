@@ -52,7 +52,6 @@ export class UserSettings {
 		});
 
 		this.#element.copyButton.addEventListener("click", () => {
-			// todo: encoded settings probably should be some of the state of the usersettings object
 			const encodedSettings = document.getElementById("buildingCode").value;
 			navigator.clipboard.writeText(encodedSettings);
 		});

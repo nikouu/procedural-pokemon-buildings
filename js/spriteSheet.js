@@ -42,7 +42,6 @@ export class SpriteSheet {
 				return this.loadFabricImage(cropDataUrl);
 
 			}).then(sprite => {
-				//this.#spriteMap.set(tileKey, sprite);
 				return { tileKey, sprite };
 			}));
 		};
