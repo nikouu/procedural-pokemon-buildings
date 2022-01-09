@@ -160,22 +160,7 @@ export class Canvas {
 			'mouse:up': () => { this.isPanning = false; this.touch = undefined },
 			'mouse:down': () => { this.isPanning = true; },
 			'mouse:move': this.#onMouseMoving.bind(this),
-			'touch:gesture': (e) => {
-				if (e.e.touches && e.e.touches.length == 2 && e.target?.name != "selectionRect") {
-					if (e.self.state == "start") {
-						this.zoomStartScale = this.fabricCanvas.getZoom();
-					}
-
-					if (isNaN(this.zoomStartScale)) {
-						return;
-					}
-
-					console.log(`${e.self.state} ${this.zoomStartScale}`)
-					this.#setZoom(e.self.x, e.self.y, this.zoomStartScale * e.self.scale);
-					e.e.preventDefault();
-					e.e.stopPropagation();
-				}
-			}
+			'touch:gesture': this.#onGesture.bind(this)
 		});
 	}
 
@@ -289,6 +274,7 @@ export class Canvas {
 				}
 				break;
 			case false:
+				//case with touch events
 				return;
 		}
 
@@ -347,6 +333,23 @@ export class Canvas {
 			}
 
 			this.touch = event.e.touches[0];
+		}
+	}
+
+	#onGesture(event) {
+		if (event.e.touches && event.e.touches.length == 2 && event.target?.name != "selectionRect") {
+			if (event.self.state == "start") {
+				this.zoomStartScale = this.fabricCanvas.getZoom();
+			}
+
+			if (isNaN(this.zoomStartScale)) {
+				return;
+			}
+
+			console.log(`${event.self.state} ${this.zoomStartScale}`)
+			this.#setZoom(event.self.x, event.self.y, this.zoomStartScale * event.self.scale);
+			event.e.preventDefault();
+			event.e.stopPropagation();
 		}
 	}
 
