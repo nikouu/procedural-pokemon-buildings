@@ -10,9 +10,9 @@ After completing my [National Dex project](https://www.nikouusitalo.com/blog/mak
 2. Create something vanilla with no faff
 3. Learn to use the HTML canvas properly*
 
-*It turns out the low level API the canvas provides isn't fun to work with and as such I picked up [Fabric.js](http://fabricjs.com/).
+**It turns out the low level API the canvas provides isn't fun to work with and as such I picked up [Fabric.js](http://fabricjs.com/).
 For spending less time writing CSS I also opted for [FlexBoxGrid](http://flexboxgrid.com/).
-Note: This has only been tested in Chrome
+Note: This has only been tested in Chrome*
 
 ## Features
 - Resize your building and have it generated on the fly
